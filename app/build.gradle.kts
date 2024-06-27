@@ -65,6 +65,7 @@ dependencies {
 
     //Hilt
     implementation(libs.google.dagger.hilt.impl.android)
+    implementation(libs.androidx.navigation.compose)
     kapt(libs.google.dagger.hilt.impl.compiler.android)
 
     //Tests
