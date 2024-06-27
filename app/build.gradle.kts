@@ -67,6 +67,12 @@ dependencies {
     implementation(libs.google.dagger.hilt.impl.android)
     implementation(libs.androidx.navigation.compose)
     kapt(libs.google.dagger.hilt.impl.compiler.android)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.gson)
+    implementation(libs.converter.gson)
 
     //Tests
     testImplementation(libs.junit)
