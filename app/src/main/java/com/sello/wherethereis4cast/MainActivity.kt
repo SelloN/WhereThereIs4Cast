@@ -30,10 +30,13 @@ class MainActivity : ComponentActivity() {
 
 @Preview
 @Composable
-fun WeatherForeCastApp(){
+fun WeatherForeCastApp() {
     WhereThereIs4CastTheme {
-        Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxSize()){
-            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Surface(color = MaterialTheme.colors.background, modifier = Modifier.fillMaxSize()) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 WeatherNavigation()
             }
         }

@@ -1,40 +1,94 @@
 package com.sello.wherethereis4cast.screens.main
 
-import androidx.compose.material.CircularProgressIndicator
+import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.produceState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sello.wherethereis4cast.data.DataOrException
-import com.sello.wherethereis4cast.model.Weather
+import com.sello.wherethereis4cast.R
 
 @Composable
 fun MainScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel()
 ) {
-    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
+//    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+//        initialValue = DataOrException(loading = true)
+//    ) {
+//        value = mainViewModel.fetchWeatherUpdate(city = "Johannesburg")
+//    }.value
+//
+//    if (weatherData.loading == true) {
+//        CircularProgressIndicator()
+//    } else if (weatherData.data != null)
+//        MainScaffold(weather = weatherData.data!!, navController)
+    MainScaffold()
+}
+
+@Composable
+fun MainContent(innerPadding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .padding(innerPadding),
     ) {
-        value = mainViewModel.fetchWeatherUpdate(city = "Johannesburg")
-    }.value
 
-    if (weatherData.loading == true) {
-        CircularProgressIndicator()
-    } else if (weatherData.data != null)
-        MainScaffold(weather = weatherData.data!!, navController)
+    }
 }
 
+@Preview
 @Composable
-fun MainContent(data: Weather) {
-    Text(text = "Weather ${data.city}")
-}
+fun MainScaffold() {
+    Box {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.ic_launcher_background),
+            contentDescription = "background_image",
+            contentScale = ContentScale.FillBounds
+        )
 
-@Composable
-fun MainScaffold(weather: Weather, navController: NavController){
-    Scaffold(topBar = {}){
-        MainContent(data = weather)
+        Scaffold(
+            backgroundColor = Color.Transparent,
+            topBar = {
+                WeatherTopBar(title = "Johannesburg") {
+                    Log.d("BTN", "MainScaffold: Button clicked")
+                }
+            },
+            modifier = Modifier.padding(all = 5.dp)
+        ) { innerPadding ->
+            MainContent(innerPadding)
+        }
+
+//        Scaffold(
+//            backgroundColor = Color.Transparent,   // Make the background transparent
+//            topBar = {
+//                TopAppBar(
+//                    modifier = Modifier
+//                        .fillMaxHeight(0.2f)
+//                        .clip(
+//                            shape = RoundedCornerShape(
+//                                bottomEnd = 30.dp,
+//                                bottomStart = 30.dp
+//                            )
+//                        ),
+//                    title = {
+//                        Text(text = "Dashboard")
+//                    }
+//                )
+//            },
+//        ) {
+//            // Scaffold content
+//        }
     }
 }
