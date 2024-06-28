@@ -2,16 +2,22 @@ package com.sello.wherethereis4cast.screens.main
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,10 +46,20 @@ fun MainScreen(
 @Composable
 fun MainContent(innerPadding: PaddingValues) {
     Column(
-        modifier = Modifier
-            .padding(innerPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize(),
     ) {
-
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.34f)
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(1f)
+                .background(colorResource(id = R.color.sea_sunny_blue))
+        )
     }
 }
 
@@ -52,8 +68,10 @@ fun MainContent(innerPadding: PaddingValues) {
 fun MainScaffold() {
     Box {
         Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(R.drawable.ic_launcher_background),
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f),
+            painter = painterResource(R.drawable.sea_sunnypng),
             contentDescription = "background_image",
             contentScale = ContentScale.FillBounds
         )
@@ -65,30 +83,9 @@ fun MainScaffold() {
                     Log.d("BTN", "MainScaffold: Button clicked")
                 }
             },
-            modifier = Modifier.padding(all = 5.dp)
+            modifier = Modifier.padding(all = 1.dp)
         ) { innerPadding ->
             MainContent(innerPadding)
         }
-
-//        Scaffold(
-//            backgroundColor = Color.Transparent,   // Make the background transparent
-//            topBar = {
-//                TopAppBar(
-//                    modifier = Modifier
-//                        .fillMaxHeight(0.2f)
-//                        .clip(
-//                            shape = RoundedCornerShape(
-//                                bottomEnd = 30.dp,
-//                                bottomStart = 30.dp
-//                            )
-//                        ),
-//                    title = {
-//                        Text(text = "Dashboard")
-//                    }
-//                )
-//            },
-//        ) {
-//            // Scaffold content
-//        }
     }
 }
