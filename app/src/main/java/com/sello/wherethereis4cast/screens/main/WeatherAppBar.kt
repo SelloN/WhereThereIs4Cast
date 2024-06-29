@@ -3,6 +3,7 @@ package com.sello.wherethereis4cast.screens.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -41,8 +42,11 @@ fun WeatherTopBar(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
                     text = title,
-                    color = MaterialTheme.colors.onSecondary,
-                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = MaterialTheme.colors.onSecondary
+                    )
                 )
             }
         },
@@ -75,8 +79,7 @@ fun WeatherTopBar(
         modifier = Modifier
             .clip(
                 shape = RoundedCornerShape(
-                    bottomEnd = 5.dp,
-                    bottomStart = 5.dp
+                    20.dp
                 )
             ),
     )
