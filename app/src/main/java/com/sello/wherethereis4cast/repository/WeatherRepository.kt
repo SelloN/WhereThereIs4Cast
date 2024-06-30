@@ -4,14 +4,11 @@ import android.util.Log
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.network.WeatherAPI
-import com.sello.wherethereis4cast.utils.Constants
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(private val api: WeatherAPI) {
     suspend fun getWeatherUpdate(
-        locationOfCity: String,
-        apiId: String = Constants.API_KEY,
-        units: String = Constants.METRIC,
+        locationOfCity: String
     ): DataOrException<Weather, Boolean, Exception> {
 
         val response = try {
