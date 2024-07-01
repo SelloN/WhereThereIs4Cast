@@ -1,5 +1,7 @@
 package com.sello.wherethereis4cast.screens.main
 
+import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -50,10 +53,24 @@ fun MainScreen(
         value = mainViewModel.fetchWeatherUpdate(city = "Moscow")
     }.value
 
+
     if (weatherData.loading == true) {
         CircularProgressIndicator()
-    } else if (weatherData.data != null)
-        MainScaffold(data = weatherData.data!!, navController)
+    } else {
+        //TODO: Internet errors
+        val imageBackground: String =
+            mainViewModel.getWeatherConditionBackground(
+                weatherData.data?.list?.get(0)?.weather?.get(0)?.main
+            ).toString()
+
+        val context: Context = LocalContext.current
+        val resources: Resources = context.resources
+        val resourcesId =
+            resources.getIdentifier(imageBackground, "drawable", context.packageName)
+
+        MainScaffold(data = weatherData.data!!, navController, resourcesId)
+    }
+
 }
 
 @Composable
@@ -105,13 +122,14 @@ fun DisplayWeatherForToday(weatherItem: WeatherItem) {
 }
 
 @Composable
-fun MainScaffold(data: Weather, navController: NavController) {
+fun MainScaffold(data: Weather, navController: NavController, resourcesId: Int) {
+
     Box {
         Image(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.4f),
-            painter = painterResource(R.drawable.sea_sunnypng),
+            painter = painterResource(resourcesId),
             contentDescription = "background_image",
             contentScale = ContentScale.FillBounds
         )
