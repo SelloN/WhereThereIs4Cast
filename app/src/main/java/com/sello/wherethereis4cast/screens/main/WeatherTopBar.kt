@@ -3,7 +3,6 @@ package com.sello.wherethereis4cast.screens.main
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,19 +20,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
-@Preview
 @Composable
 fun WeatherTopBar(
     title: String = "Title",
     icon: ImageVector? = null,
     isMainScreen: Boolean = true,
     elevation: Dp = 3.dp,
-//    navController: NavController,
+    navController: NavController,
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {},
 ) {
@@ -52,7 +50,7 @@ fun WeatherTopBar(
         },
         actions = {
             if (isMainScreen) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { onAddActionClicked.invoke() }) {
                     Icon(imageVector = Icons.Default.Search, contentDescription = "search icon")
                 }
                 IconButton(onClick = { /*TODO*/ }) {

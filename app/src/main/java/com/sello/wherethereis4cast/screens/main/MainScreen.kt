@@ -36,28 +36,28 @@ import coil.compose.rememberImagePainter
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.model.WeatherItem
+import com.sello.wherethereis4cast.navigation.state.WeatherScreens
 import com.sello.wherethereis4cast.utils.fetchResourceId
 import com.sello.wherethereis4cast.utils.formatDate
 import com.sello.wherethereis4cast.utils.formatDecimals
 
 @Composable
 fun MainScreen(
-    navController: NavController, mainViewModel: MainViewModel = hiltViewModel()
+    navController: NavController, mainViewModel: MainViewModel = hiltViewModel(), city: String?
 ) {
+
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = mainViewModel.fetchWeatherUpdate(city = "Moscow")
+        value = mainViewModel.fetchWeatherUpdate(city = "$city")
     }.value
 
     if (weatherData.loading == true) {
         CircularProgressIndicator()
     } else {
-        //TODO: Internet errors
         val imageBackground: Pair<String, String>? =
             mainViewModel.getWeatherConditionBackground(
-                weatherData.data?.list?.get(0)?.weather?.get(0)?.main
-            )
+                weatherData.data?.list?.get(0)?.weather?.get(0)?.main)
 
         MainScaffold(data = weatherData.data!!, navController,
             fetchResourceId(imageBackground?.first, "drawable"),
@@ -134,7 +134,12 @@ fun MainScaffold(
 
         Scaffold(
             backgroundColor = Color.Transparent, topBar = {
-                WeatherTopBar(title = "Johannesburg") {
+                WeatherTopBar(
+                    title = "Johannesburg",
+                    navController = navController,
+                    onAddActionClicked = {
+                    navController.navigate(WeatherScreens.SearchScreen.name)
+                }) {
                     Log.d("BTN", "MainScaffold: Button clicked")
                 }
             }, modifier = Modifier.padding(all = 1.dp)
