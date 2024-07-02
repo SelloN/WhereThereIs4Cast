@@ -1,7 +1,5 @@
 package com.sello.wherethereis4cast.screens.main
 
-import android.content.Context
-import android.content.res.Resources
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -36,10 +33,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import com.sello.wherethereis4cast.R
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.model.WeatherItem
+import com.sello.wherethereis4cast.utils.fetchResourceId
 import com.sello.wherethereis4cast.utils.formatDate
 import com.sello.wherethereis4cast.utils.formatDecimals
 
@@ -53,28 +50,24 @@ fun MainScreen(
         value = mainViewModel.fetchWeatherUpdate(city = "Moscow")
     }.value
 
-
     if (weatherData.loading == true) {
         CircularProgressIndicator()
     } else {
         //TODO: Internet errors
-        val imageBackground: String =
+        val imageBackground: Pair<String, String>? =
             mainViewModel.getWeatherConditionBackground(
                 weatherData.data?.list?.get(0)?.weather?.get(0)?.main
-            ).toString()
+            )
 
-        val context: Context = LocalContext.current
-        val resources: Resources = context.resources
-        val resourcesId =
-            resources.getIdentifier(imageBackground, "drawable", context.packageName)
-
-        MainScaffold(data = weatherData.data!!, navController, resourcesId)
+        MainScaffold(data = weatherData.data!!, navController,
+            fetchResourceId(imageBackground?.first, "drawable"),
+            fetchResourceId(imageBackground?.second, "color"))
     }
 
 }
 
 @Composable
-fun MainContent(innerPadding: PaddingValues, data: Weather) {
+fun MainContent(innerPadding: PaddingValues, data: Weather, colorResourceId: Int) {
     val weatherItem = data.list[0]
 
     Column(
@@ -96,7 +89,7 @@ fun MainContent(innerPadding: PaddingValues, data: Weather) {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(1f)
-                .background(colorResource(id = R.color.sea_sunny_blue))
+                .background(colorResource(id = colorResourceId))
         ) {
             Column {
                 DisplayTemperaturePercentiles(weatherItem)
@@ -122,7 +115,12 @@ fun DisplayWeatherForToday(weatherItem: WeatherItem) {
 }
 
 @Composable
-fun MainScaffold(data: Weather, navController: NavController, resourcesId: Int) {
+fun MainScaffold(
+    data: Weather,
+    navController: NavController,
+    resourcesId: Int,
+    colorResourceId: Int
+) {
 
     Box {
         Image(
@@ -141,7 +139,7 @@ fun MainScaffold(data: Weather, navController: NavController, resourcesId: Int) 
                 }
             }, modifier = Modifier.padding(all = 1.dp)
         ) { innerPadding ->
-            MainContent(innerPadding, data)
+            MainContent(innerPadding, data, colorResourceId)
         }
     }
 }

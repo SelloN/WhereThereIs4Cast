@@ -21,17 +21,4 @@ class WeatherRepository @Inject constructor(private val api: WeatherAPI) {
         Log.d("SUCCESSFUL", "getWeatherUpdate: $response")
         return DataOrException(data = response)
     }
-
-//    fun getWeatherConditionBackground(main: String?): DataOrException<String, Boolean, Exception> {
-//
-//        val backgroundValue = try {
-//            main?.let { WeatherBackgroundState.getBackgroundValue(it) }
-//        } catch (e: Exception) {
-//            Log.d("CAUGHT", "getWeatherConditionBackground: $e")
-//            return DataOrException(exception = e)
-//        }
-//
-//        Log.d("SUCCESSFUL", "getWeatherConditionBackground: $backgroundValue")
-//        return DataOrException(data = backgroundValue)
-//    }
 }

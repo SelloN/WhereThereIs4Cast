@@ -7,31 +7,31 @@ enum class WeatherBackgroundState {
     Snow;
 
     companion object {
-        private val values = entries.toTypedArray()
 
-        fun getBackgroundValue(value: String): String {
+        fun getBackgroundValue(value: String): Pair<String, String> {
+            return when (value) {
+                Clear.name -> {
+                    Pair("clear_background", "sunny_blue")
+                }
 
-            for (i in values) {
-                return when (i) {
-                    Clear -> {
-                        "clear_background"
-                    }
+                Clouds.name -> {
+                    Pair("cloudy_background", "cloudy_grey")
+                }
 
-                    Clouds -> {
-                        "cloudy_background"
-                    }
+                Rain.name -> {
+                    Pair("rainy_background", "rainy_grey")
+                }
 
-                    Rain -> {
-                        "rain_background"
-                    }
+                Snow.name -> {
+                    Pair("rainy_background", "rainy_grey")
+                }
 
-                    Snow -> {
-                        "rain_background"
-                    }
+                else -> {
+                    //will never be a case
+                    Pair(String(), String())
                 }
             }
-            return "No specified weather condition that is handles in our code. " +
-                    "Please check weatherItem.main"
         }
+
     }
 }

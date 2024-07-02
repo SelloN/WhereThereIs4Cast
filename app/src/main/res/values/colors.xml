@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
 <!--    background color schemes-->
-    <color name="sea_sunny_blue">#4a90e2</color>
+    <color name="sunny_blue">#4a90e2</color>
+    <color name="cloudy_grey">#628594</color>
+    <color name="rainy_grey">#57575d</color>
+
 </resources>
