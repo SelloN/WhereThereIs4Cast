@@ -13,6 +13,9 @@ import com.sello.wherethereis4cast.screens.main.MainScreen
 import com.sello.wherethereis4cast.screens.main.MainViewModel
 import com.sello.wherethereis4cast.screens.search.SearchScreen
 import com.sello.wherethereis4cast.screens.splashscreen.SplashScreen
+import com.sello.wherethereis4cast.screens.about.AboutScreen
+import com.sello.wherethereis4cast.screens.favourites.FavouritesScreen
+import com.sello.wherethereis4cast.screens.settings.SettingsScreen
 
 @ExperimentalComposeUiApi
 @Composable
@@ -38,6 +41,18 @@ fun WeatherNavigation() {
 
         composable(WeatherScreens.SearchScreen.name){
             SearchScreen(navController = navController)
+        }
+
+        composable(WeatherScreens.AboutScreen.name){
+            AboutScreen(navController = navController)
+        }
+
+        composable(WeatherScreens.SettingsScreen.name){
+            SettingsScreen(navController = navController)
+        }
+
+        composable(WeatherScreens.FavouriteScreen.name){
+            FavouritesScreen(navController = navController)
         }
     }
 }
