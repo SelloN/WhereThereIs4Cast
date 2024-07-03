@@ -135,7 +135,7 @@ fun MainScaffold(
         Scaffold(
             backgroundColor = Color.Transparent, topBar = {
                 WeatherTopBar(
-                    title = "Johannesburg",
+                    title = data.city.name + " ,${data.city.country}",
                     navController = navController,
                     onAddActionClicked = {
                     navController.navigate(WeatherScreens.SearchScreen.name)

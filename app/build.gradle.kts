@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.dagger.hilt.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -67,13 +68,20 @@ dependencies {
     //Hilt
     implementation(libs.google.dagger.hilt.impl.android)
     implementation(libs.androidx.navigation.compose)
-    kapt(libs.google.dagger.hilt.impl.compiler.android)
+    ksp(libs.google.dagger.hilt.impl.compiler.android)
     implementation(libs.androidx.hilt.navigation.compose)
 
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.gson)
     implementation(libs.converter.gson)
+
+    //Room
+    implementation (libs.androidx.room.runtime)
+
+    // To use Kotlin annotation processing tool (kapt) MUST HAVE!
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.androidx.room.ktx)
 
     //Tests
     testImplementation(libs.junit)

@@ -18,6 +18,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -39,8 +41,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.sello.wherethereis4cast.model.Favourite
 import com.sello.wherethereis4cast.navigation.state.WeatherScreens
+import com.sello.wherethereis4cast.screens.favourites.FavouriteViewModel
 
 @Composable
 fun WeatherTopBar(
@@ -49,6 +54,7 @@ fun WeatherTopBar(
     isMainScreen: Boolean = true,
     elevation: Dp = 3.dp,
     navController: NavController,
+    favouriteViewModel: FavouriteViewModel = hiltViewModel(),
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {},
 ) {
@@ -96,6 +102,23 @@ fun WeatherTopBar(
                         onButtonClicked.invoke()
                     },
                 )
+            }
+
+            if(isMainScreen){
+                Icon(imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favourite icon",
+                    modifier = Modifier
+                        .scale(0.9f)
+                        .clickable {
+                            val dataList = title.split(",")
+                            favouriteViewModel.insertFavourite(
+                                Favourite(
+                                    city = dataList[0], // city name
+                                    country = dataList[1] // country code
+                                )
+                            )
+                        },
+                    tint = Color.Red.copy(alpha = 0.6f))
             }
         },
         backgroundColor = Color.Transparent,
