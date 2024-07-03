@@ -1,5 +1,7 @@
 package com.sello.wherethereis4cast.screens.main
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -62,6 +66,12 @@ fun WeatherTopBar(
     val showDialogState = remember {
         mutableStateOf(false)
     }
+
+    val showItState = remember {
+        mutableStateOf(false)
+    }
+
+    val context = LocalContext.current
 
     if (showDialogState.value) {
         ShowSettingDropDownMenu(showDialogState = showDialogState, navController = navController)
@@ -104,21 +114,39 @@ fun WeatherTopBar(
                 )
             }
 
-            if(isMainScreen){
-                Icon(imageVector = Icons.Default.Favorite,
-                    contentDescription = "Favourite icon",
-                    modifier = Modifier
-                        .scale(0.9f)
-                        .clickable {
-                            val dataList = title.split(",")
-                            favouriteViewModel.insertFavourite(
-                                Favourite(
-                                    city = dataList[0], // city name
-                                    country = dataList[1] // country code
-                                )
-                            )
-                        },
-                    tint = Color.Red.copy(alpha = 0.6f))
+            if (isMainScreen) {
+                val isAlreadyFavList = favouriteViewModel.favouriteList
+                    .collectAsState().value.filter { item ->
+                        (item.city == title.split(",")[0])
+                    }
+
+                if (isAlreadyFavList.isEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favourite icon",
+                        modifier = Modifier
+                            .scale(0.9f)
+                            .clickable {
+                                val dataList = title.split(",")
+                                favouriteViewModel
+                                    .insertFavourite(
+                                        Favourite(
+                                            city = dataList[0], // city name
+                                            country = dataList[1] // country code
+                                        )
+                                    )
+                                    .run {
+                                        showItState.value = true
+                                    }
+                            },
+                        tint = Color.Red.copy(alpha = 0.6f)
+                    )
+                } else {
+                    showItState.value = false
+                    Box {}
+                }
+
+                ShowToast(context = context, showItState)
             }
         },
         backgroundColor = Color.Transparent,
@@ -131,6 +159,17 @@ fun WeatherTopBar(
             ),
     )
 }
+
+@Composable
+fun ShowToast(context: Context, showIt: MutableState<Boolean>) {
+    if (showIt.value) {
+        Toast.makeText(
+            context, " Added to Favorites",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
 
 @Composable
 fun ShowSettingDropDownMenu(showDialogState: MutableState<Boolean>, navController: NavController) {
@@ -165,7 +204,8 @@ fun ShowSettingDropDownMenu(showDialogState: MutableState<Boolean>, navControlle
                         }, contentDescription = null,
                         tint = Color.LightGray
                     )
-                    Text(text = text,
+                    Text(
+                        text = text,
                         modifier = Modifier.clickable {
                             navController.navigate(
                                 when (text) {
