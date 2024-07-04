@@ -83,6 +83,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
 
+    //location
+    implementation (libs.play.services.location)
+
     //Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

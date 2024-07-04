@@ -20,6 +20,7 @@ import com.sello.wherethereis4cast.screens.settings.SettingsScreen
 @ExperimentalComposeUiApi
 @Composable
 fun WeatherNavigation() {
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = WeatherScreens.SplashScreen.name) {
         composable(WeatherScreens.SplashScreen.name){
@@ -27,16 +28,17 @@ fun WeatherNavigation() {
         }
 
         val route = WeatherScreens.MainScreen.name
-        composable("$route/{city}",
-            arguments = listOf(navArgument(name = "city"){
-                type = NavType.StringType
-            })){ navBack ->
-            navBack.arguments?.getString("city").let { city ->
+        composable("$route/{textLat}/{textLong}",
+            arguments = listOf(
+                navArgument(name = "textLat") {type = NavType.StringType },
+                navArgument(name= "textLong") {type = NavType.StringType })
+            ){ backStackEntry ->
 
-                val mainViewModel = hiltViewModel<MainViewModel>()
-                MainScreen(navController = navController, mainViewModel,
-                    city = city)
-            }
+            val textLat = backStackEntry.arguments!!.getString("textLat")
+            val textLong = backStackEntry.arguments!!.getString("textLong")
+
+            val mainViewModel = hiltViewModel<MainViewModel>()
+            MainScreen(navController = navController, mainViewModel, latitude = textLat.toString(), longitude = textLong.toString())
         }
 
         composable(WeatherScreens.SearchScreen.name){

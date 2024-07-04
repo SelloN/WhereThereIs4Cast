@@ -14,4 +14,12 @@ interface WeatherAPI {
         @Query(value = "appid") apiId: String = Constants.API_KEY,
         @Query(value = "units") units: String = Constants.METRIC,
         ): Weather
+
+    @GET(value = "data/2.5/forecast/daily")
+    suspend fun getWeatherUpdate(
+        @Query(value = "lat") latitude: Double,
+        @Query(value = "lon") longitude: Double,
+        @Query(value = "appid") apiId: String = Constants.API_KEY,
+        @Query(value = "units") units: String = Constants.METRIC,
+    ): Weather
 }

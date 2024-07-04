@@ -43,14 +43,25 @@ import com.sello.wherethereis4cast.utils.formatDecimals
 
 @Composable
 fun MainScreen(
-    navController: NavController, mainViewModel: MainViewModel = hiltViewModel(), city: String?
-) {
+    navController: NavController,
+    mainViewModel: MainViewModel = hiltViewModel(),
+    latitude: String, longitude: String, city: String = "") {
 
-    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-    ) {
-        value = mainViewModel.fetchWeatherUpdate(city = "$city")
-    }.value
+    val weatherData: Any
+
+    if (latitude.toDouble() != 0.0) {
+        weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+            initialValue = DataOrException(loading = true)
+        ) {
+            value = mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
+        }.value
+    } else {
+        weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+            initialValue = DataOrException(loading = true)
+        ) {
+            value = mainViewModel.fetchWeatherUpdate(city = city)
+        }.value
+    }
 
     if (weatherData.loading == true) {
         CircularProgressIndicator()

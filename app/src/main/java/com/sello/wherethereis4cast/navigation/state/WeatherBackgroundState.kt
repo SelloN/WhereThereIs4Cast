@@ -1,7 +1,6 @@
 package com.sello.wherethereis4cast.navigation.state
 
 enum class WeatherBackgroundState {
-    Clear,
     Clouds,
     Rain,
     Snow;
@@ -10,10 +9,6 @@ enum class WeatherBackgroundState {
 
         fun getBackgroundValue(value: String): Pair<String, String> {
             return when (value) {
-                Clear.name -> {
-                    Pair("clear_background", "sunny_blue")
-                }
-
                 Clouds.name -> {
                     Pair("cloudy_background", "cloudy_grey")
                 }
@@ -27,8 +22,7 @@ enum class WeatherBackgroundState {
                 }
 
                 else -> {
-                    //will never be a case
-                    Pair(String(), String())
+                    Pair("clear_background", "sunny_blue")
                 }
             }
         }

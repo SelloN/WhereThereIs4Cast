@@ -1,5 +1,8 @@
 package com.sello.wherethereis4cast.screens.splashscreen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -21,16 +24,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.sello.wherethereis4cast.R
 import com.sello.wherethereis4cast.navigation.state.WeatherScreens
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    val defaultCity = "Johannesburg"
+
+    val fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(LocalContext.current)
+
+    var textLat = 0.0
+    var textLong = 0.0
+
+    if (ContextCompat.checkSelfPermission(LocalContext.current, Manifest.permission.ACCESS_FINE_LOCATION)
+        == PackageManager.PERMISSION_GRANTED){
+        val location = fusedLocationProviderClient.lastLocation
+
+        location.addOnSuccessListener {
+             textLat = it.latitude
+             textLong = it.longitude
+            Log.d("TAG", "showLatAndLong: lat: $textLat and long: $textLong")
+        }
+    }
+
     val scale = remember {
         Animatable(0f)
     }
@@ -47,7 +71,7 @@ fun SplashScreen(navController: NavController) {
         )
 
         delay(3000L)
-        navController.navigate(WeatherScreens.MainScreen.name + "/$defaultCity")
+        navController.navigate(WeatherScreens.MainScreen.name + "/$textLat/$textLong")
     })
 
     Surface(
