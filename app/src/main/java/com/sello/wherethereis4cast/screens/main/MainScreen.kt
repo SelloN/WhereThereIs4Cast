@@ -20,6 +20,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.model.WeatherItem
 import com.sello.wherethereis4cast.navigation.state.WeatherScreens
+import com.sello.wherethereis4cast.screens.search.SearchedLocationViewModel
 import com.sello.wherethereis4cast.utils.fetchResourceId
 import com.sello.wherethereis4cast.utils.formatDate
 import com.sello.wherethereis4cast.utils.formatDecimals
@@ -45,21 +47,25 @@ import com.sello.wherethereis4cast.utils.formatDecimals
 fun MainScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel(),
-    latitude: String, longitude: String, city: String = "") {
-
+    searchedLocationViewModel: SearchedLocationViewModel = hiltViewModel(),
+    latitude: String = Double.POSITIVE_INFINITY.toString(),
+    longitude: String = Double.POSITIVE_INFINITY.toString()
+) {
     val weatherData: Any
+    val searchedLocations = searchedLocationViewModel.searchedLocation.collectAsState().value
 
-    if (latitude.toDouble() != 0.0) {
+    if (latitude.toDouble() != Double.POSITIVE_INFINITY) {
         weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
-            value = mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
+            value = mainViewModel.fetchWeatherUpdate(latitude = latitude.toDouble(),
+                longitude = longitude.toDouble())
         }.value
     } else {
         weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
-            value = mainViewModel.fetchWeatherUpdate(city = city)
+            value = mainViewModel.fetchWeatherUpdate(city = searchedLocations.last().city)
         }.value
     }
 

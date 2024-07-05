@@ -1,5 +1,6 @@
 package com.sello.wherethereis4cast.screens.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,13 +29,15 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sello.wherethereis4cast.navigation.state.WeatherScreens
+import com.sello.wherethereis4cast.model.SearchedLocation
 import com.sello.wherethereis4cast.screens.main.WeatherTopBar
 
 @ExperimentalComposeUiApi
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(navController: NavController,
+                 searchedLocationViewModel: SearchedLocationViewModel = hiltViewModel()) {
     Scaffold(topBar = {
         WeatherTopBar(
             title = "Search",
@@ -57,7 +60,11 @@ fun SearchScreen(navController: NavController) {
                         .align(Alignment.CenterHorizontally),
                     innerPadding
                 ) { mCity ->
-                    navController.navigate(WeatherScreens.MainScreen.name + "/$mCity")
+                    searchedLocationViewModel.deleteAllSearchedLocations()
+                    val searchedLocation = SearchedLocation(city = mCity)
+                    searchedLocationViewModel.insertSearchedLocation(searchedLocation)
+                    Log.d("SAVED", "SearchScreen: $searchedLocation")
+                    navController.popBackStack()
                 }
             }
         }

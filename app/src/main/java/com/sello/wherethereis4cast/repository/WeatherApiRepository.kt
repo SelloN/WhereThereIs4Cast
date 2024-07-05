@@ -6,7 +6,7 @@ import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.network.WeatherAPI
 import javax.inject.Inject
 
-class WeatherRepository @Inject constructor(private val api: WeatherAPI) {
+class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
     suspend fun getWeatherUpdate(
         locationOfCity: String
     ): DataOrException<Weather, Boolean, Exception> {

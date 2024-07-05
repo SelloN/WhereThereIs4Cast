@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.navigation.state.WeatherBackgroundState
-import com.sello.wherethereis4cast.repository.WeatherRepository
+import com.sello.wherethereis4cast.repository.WeatherApiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: WeatherRepository) : ViewModel() {
+class MainViewModel @Inject constructor(private val repository: WeatherApiRepository) : ViewModel() {
 
     suspend fun fetchWeatherUpdate(city: String = ""): DataOrException<Weather, Boolean, Exception> {
         return repository.getWeatherUpdate(locationOfCity = city)
