@@ -54,18 +54,18 @@ fun MainScreen(
     val weatherData: Any
     val searchedLocations = searchedLocationViewModel.searchedLocation.collectAsState().value
 
-    if (latitude.toDouble() != Double.POSITIVE_INFINITY) {
-        weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-            initialValue = DataOrException(loading = true)
-        ) {
-            value = mainViewModel.fetchWeatherUpdate(latitude = latitude.toDouble(),
-                longitude = longitude.toDouble())
-        }.value
-    } else {
+    if(searchedLocations.isNotEmpty() && searchedLocations.last().city.isNotBlank()){
         weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
             value = mainViewModel.fetchWeatherUpdate(city = searchedLocations.last().city)
+        }.value
+    }
+    else{
+        weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+            initialValue = DataOrException(loading = true)
+        ) {
+            value = mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
         }.value
     }
 
