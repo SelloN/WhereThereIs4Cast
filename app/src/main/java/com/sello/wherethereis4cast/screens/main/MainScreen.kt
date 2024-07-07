@@ -48,8 +48,8 @@ fun MainScreen(
     navController: NavController,
     mainViewModel: MainViewModel = hiltViewModel(),
     searchedLocationViewModel: SearchedLocationViewModel = hiltViewModel(),
-    latitude: String = Double.POSITIVE_INFINITY.toString(),
-    longitude: String = Double.POSITIVE_INFINITY.toString()
+    latitude: String,
+    longitude: String
 ) {
     val weatherData: Any
     val searchedLocations = searchedLocationViewModel.searchedLocation.collectAsState().value
