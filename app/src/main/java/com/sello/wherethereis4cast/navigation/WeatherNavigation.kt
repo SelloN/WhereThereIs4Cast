@@ -39,9 +39,8 @@ fun WeatherNavigation() {
             val textLong = backStackEntry.arguments!!.getString("textLong")
 
             val mainViewModel = hiltViewModel<MainViewModel>()
-            val searchedLocationViewModel = hiltViewModel<SearchedLocationViewModel>()
 
-            MainScreen(navController = navController, mainViewModel, searchedLocationViewModel, latitude = textLat.toString(),
+            MainScreen(navController = navController, mainViewModel, latitude = textLat.toString(),
                 longitude = textLong.toString())
         }
 
