@@ -1,5 +1,6 @@
 package com.sello.wherethereis4cast.screens.main
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -160,17 +162,22 @@ fun ShowOfflineDialog() {
     val openDialog = remember { mutableStateOf(true) }
 
     if (openDialog.value) {
+        val context = LocalContext.current
+
         AlertDialog(
             onDismissRequest = {
                 openDialog.value = false
             },
             title = { Text(text = "Network offline") },
-            text = { Text(text = "You can retry after turning it on") },
+            text = { Text(text = "Please switch on your network and restart app") },
             confirmButton = {
                 TextButton(
                     onClick = {
+                        val activity = context as? Activity
                         openDialog.value = false
-                    }) { Text("Retry") }
+                        activity?.finish()
+
+                    }) { Text("Close App") }
             },
         )
     }
@@ -261,7 +268,7 @@ fun MainContent(
             }
         }
         if(showToast) ShowToast(LocalContext.current, message = "Your searched location wasn't found." +
-                " We've reverted to your current location. Please try again.")
+                " Reverted to your current location. Please try again.")
     }
 }
 
@@ -374,5 +381,18 @@ fun ShowToast(context: Context, message: String) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
+
+@Composable
+fun CloseAppButton() {
+    val context = LocalContext.current
+    val activity = context as? Activity
+
+    Button(onClick = {
+        activity?.finish()
+    }) {
+        Text("Close App")
+    }
+}
+
 
 
