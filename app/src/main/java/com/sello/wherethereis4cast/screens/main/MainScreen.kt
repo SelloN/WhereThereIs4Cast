@@ -17,13 +17,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -104,11 +108,9 @@ fun WeatherContent(
 ) {
     when {
         weatherDataState.isConnected == false -> {
-            Log.d(
-                "WeatherContent method",
-                "No internet connection. Please check your network settings."
-            )
-            Text(text = "No internet connection. Please check your network settings.")
+            Log.d("WeatherContent method",
+                "No internet connection. Please check your network settings.")
+            ShowOfflineDialog()
         }
 
         weatherDataState.loading == true -> {
@@ -151,6 +153,27 @@ fun WeatherContent(
     }
 
     Log.d("WeatherContent: WeatherDataState ", weatherDataState.data.toString())
+}
+
+@Composable
+fun ShowOfflineDialog() {
+    val openDialog = remember { mutableStateOf(true) }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = {
+                openDialog.value = false
+            },
+            title = { Text(text = "Network offline") },
+            text = { Text(text = "You can retry after turning it on") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        openDialog.value = false
+                    }) { Text("Retry") }
+            },
+        )
+    }
 }
 
 fun getImageBackground(
