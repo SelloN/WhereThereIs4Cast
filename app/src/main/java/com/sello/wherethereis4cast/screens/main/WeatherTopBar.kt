@@ -22,9 +22,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -175,7 +173,7 @@ fun ShowToast(context: Context, showIt: MutableState<Boolean>) {
 fun ShowSettingDropDownMenu(showDialogState: MutableState<Boolean>, navController: NavController) {
 
     var expanded by remember { mutableStateOf(true) }
-    val items = listOf("About", "Favourites", "Settings")
+    val items = listOf("Favourites")
 
     Column(
         modifier = Modifier
@@ -196,30 +194,18 @@ fun ShowSettingDropDownMenu(showDialogState: MutableState<Boolean>, navControlle
                     showDialogState.value = false
                 }) {
                     Icon(
-                        imageVector = when (text) {
-                            "About" -> Icons.Default.Info
-                            "Favourites" -> Icons.Default.FavoriteBorder
-                            else -> Icons.Default.Settings
-
-                        }, contentDescription = null,
+                        imageVector =  Icons.Default.FavoriteBorder,
+                        contentDescription = null,
                         tint = Color.LightGray
                     )
                     Text(
                         text = text,
                         modifier = Modifier.clickable {
-                            navController.navigate(
-                                when (text) {
-                                    "About" -> WeatherScreens.AboutScreen.name
-                                    "Favourites" -> WeatherScreens.FavouriteScreen.name
-                                    else -> WeatherScreens.SettingsScreen.name
-                                }
-                            )
+                            navController.navigate(WeatherScreens.FavouriteScreen.name)
                         }, fontWeight = FontWeight.W300
                     )
                 }
             }
         }
     }
-
-
 }

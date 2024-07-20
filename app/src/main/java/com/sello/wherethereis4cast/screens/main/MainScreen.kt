@@ -382,17 +382,5 @@ fun ShowToast(context: Context, message: String) {
     }
 }
 
-@Composable
-fun CloseAppButton() {
-    val context = LocalContext.current
-    val activity = context as? Activity
-
-    Button(onClick = {
-        activity?.finish()
-    }) {
-        Text("Close App")
-    }
-}
-
 
 
