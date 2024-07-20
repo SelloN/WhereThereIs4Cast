@@ -2,6 +2,7 @@ package com.sello.wherethereis4cast.screens.main
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,10 +20,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,30 +56,40 @@ fun MainScreen(
     val weatherDataState: DataOrException<Weather, Boolean, Exception>
     val context: Context = LocalContext.current
     val isConnected = isNetworkAvailable(context)
-    val searchedCity = navController.currentBackStackEntry?.savedStateHandle?.get<String>("searchedCity")
+    val searchedCity =
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("searchedCity")
 
-    if(!searchedCity.isNullOrEmpty()){
+    if (!searchedCity.isNullOrEmpty()) {
         weatherDataState = produceState<DataOrException<Weather, Boolean, Exception>>(
-            initialValue = DataOrException(loading = true)) {
+            initialValue = DataOrException(loading = true)
+        ) {
             value = if (isConnected) {
                 mainViewModel.fetchWeatherUpdate(city = searchedCity)
-            }
-            else {
+            } else {
                 DataOrException(isConnected = false, loading = false)
             }
         }.value
-    }
-    else{
+    } else {
         weatherDataState = produceWeatherStateUsingCoordinates(mainViewModel, latitude, longitude)
     }
 
-    WeatherContent(weatherDataState, mainViewModel, navController, latitude = latitude,
-        longitude = longitude, false)
+    WeatherContent(
+        weatherDataState, mainViewModel, navController, latitude = latitude,
+        longitude = longitude
+    )
 }
 
 @Composable
-fun produceWeatherStateUsingCoordinates(mainViewModel: MainViewModel, latitude: String, longitude: String): DataOrException<Weather, Boolean, Exception>{
-     return produceState<DataOrException<Weather, Boolean, Exception>>(initialValue = DataOrException(loading = true)) {
+fun produceWeatherStateUsingCoordinates(
+    mainViewModel: MainViewModel,
+    latitude: String,
+    longitude: String
+): DataOrException<Weather, Boolean, Exception> {
+    return produceState<DataOrException<Weather, Boolean, Exception>>(
+        initialValue = DataOrException(
+            loading = true
+        )
+    ) {
         value = mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
     }.value
 }
@@ -91,24 +101,29 @@ fun WeatherContent(
     navController: NavController,
     latitude: String = String(),
     longitude: String = String(),
-    showSnackbar: Boolean
 ) {
     when {
         weatherDataState.isConnected == false -> {
-            Log.d("WeatherContent method", "No internet connection. Please check your network settings.")
+            Log.d(
+                "WeatherContent method",
+                "No internet connection. Please check your network settings."
+            )
             Text(text = "No internet connection. Please check your network settings.")
         }
+
         weatherDataState.loading == true -> {
             CircularProgressIndicator()
         }
+
         weatherDataState.data != null && weatherDataState.isSearchedFromTextFieldLocationFound == false -> {
 
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
             Log.d("WeatherContent method", "Searching for lat and long")
-            MainScaffold(weatherDataState, navController, imageBackground, showSnackbar = true)
+            MainScaffold(weatherDataState, navController, imageBackground)
         }
+
         weatherDataState.isSearchedFromTextFieldLocationFound == true -> {
 
             val imageBackground: Pair<String, String>? =
@@ -117,20 +132,22 @@ fun WeatherContent(
             Log.d("WeatherContent method", "Searched city: ${weatherDataState.data?.city}")
             MainScaffold(weatherDataState, navController, imageBackground)
         }
+
         weatherDataState.isSearchedFromTextFieldLocationFound == false &&
                 weatherDataState.exception != null -> {
 
-            val producedWeatherState = produceWeatherStateUsingCoordinates(mainViewModel, latitude,
-                longitude)
+            val producedWeatherState =
+                produceWeatherStateUsingCoordinates(mainViewModel, latitude, longitude)
 
-            if (producedWeatherState.data != null){
+            if (producedWeatherState.data != null) {
                 val imageBackground: Pair<String, String>? =
                     getImageBackground(producedWeatherState, mainViewModel)
 
                 Log.d("WeatherContent method", "Searched city: ${weatherDataState.data?.city}")
-                MainScaffold(producedWeatherState, navController, imageBackground)
+                MainScaffold(producedWeatherState, navController, imageBackground, true)
             }
         }
+
     }
 
     Log.d("WeatherContent: WeatherDataState ", weatherDataState.data.toString())
@@ -141,7 +158,8 @@ fun getImageBackground(
     mainViewModel: MainViewModel
 ): Pair<String, String>? {
     return mainViewModel.getWeatherConditionBackground(
-        weatherDataState.data?.list?.get(0)?.weather?.get(0)?.main)
+        weatherDataState.data?.list?.get(0)?.weather?.get(0)?.main
+    )
 }
 
 @Composable
@@ -149,7 +167,7 @@ fun MainScaffold(
     weatherState: DataOrException<Weather, Boolean, Exception>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
-    showSnackbar: Boolean = false
+    showToast: Boolean = false
 ) {
     val backgroundImageResourcesId = fetchResourceId(imageBackground?.first, "drawable")
     val colorResourceId = fetchResourceId(imageBackground?.second, "color")
@@ -165,7 +183,8 @@ fun MainScaffold(
         )
 
         Scaffold(
-            backgroundColor = Color.Transparent, topBar = {
+            backgroundColor = Color.Transparent,
+            topBar = {
                 WeatherTopBar(
                     title = weatherState.data?.city?.name + " ,${weatherState.data?.city?.country}",
                     navController = navController,
@@ -177,28 +196,18 @@ fun MainScaffold(
             },
             modifier = Modifier.padding(all = 1.dp),
         ) { innerPadding ->
-            MainContent(innerPadding, weatherState.data!!, colorResourceId)
+            MainContent(innerPadding, weatherState.data!!, colorResourceId, showToast)
         }
     }
 }
 
 @Composable
-fun ShowSnackbar(isShown: Boolean, onDismiss: () -> Unit) {
-    if (isShown) {
-        Snackbar(
-            action = {
-                TextButton(onClick = onDismiss) {
-                    Text("DISMISS", color = Color.White)
-                }
-            }
-        ) {
-            Text(text = "The city you entered is wrong")
-        }
-    }
-}
-
-@Composable
-fun MainContent(innerPadding: PaddingValues, data: Weather, colorResourceId: Int) {
+fun MainContent(
+    innerPadding: PaddingValues,
+    data: Weather,
+    colorResourceId: Int,
+    showToast: Boolean,
+) {
     val weatherItem = data.list[0]
 
     Column(
@@ -228,6 +237,8 @@ fun MainContent(innerPadding: PaddingValues, data: Weather, colorResourceId: Int
                 WeatherTemperatureDays(data)
             }
         }
+        if(showToast) ShowToast(LocalContext.current, message = "Your searched location wasn't found." +
+                " We've reverted to your current location. Please try again.")
     }
 }
 
@@ -331,6 +342,13 @@ fun TemperaturePercentiles(weatherItem: WeatherItem) {
             )
             Text(text = "max", style = TextStyle(fontSize = 15.sp, color = Color.White))
         }
+    }
+}
+
+@Composable
+fun ShowToast(context: Context, message: String) {
+    LaunchedEffect(message) {
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
 
