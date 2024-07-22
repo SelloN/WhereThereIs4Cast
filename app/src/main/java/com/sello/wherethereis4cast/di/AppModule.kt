@@ -21,7 +21,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideOpenWeatherAP(): WeatherAPI {
+    fun provideOpenWeatherAPI(): WeatherAPI {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
