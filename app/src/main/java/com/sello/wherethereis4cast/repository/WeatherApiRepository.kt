@@ -15,11 +15,12 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
             api.getWeatherUpdate(location = locationOfCity)
         } catch (e: Exception) {
             Log.d("CAUGHT", "getWeatherUpdate: $e")
-            return DataOrException(exception = e)
+            return DataOrException(exception = e,
+                isSearchedFromTextFieldLocationFound = false)
         }
 
         Log.d("SUCCESSFUL", "getWeatherUpdate: $response")
-        return DataOrException(data = response)
+        return DataOrException(data = response, isSearchedFromTextFieldLocationFound = true, loading = false)
     }
 
     suspend fun getWeatherUpdate(latitude: Double, longitude: Double):
@@ -28,11 +29,11 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
         val response = try {
             api.getWeatherUpdate(latitude, longitude)
         } catch (e: Exception) {
-            Log.d("CAUGHT", "getWeatherUpdate: $e")
-            return DataOrException(exception = e)
+            Log.d("CAUGHT", "getWeatherUpdate using coordinates: $e")
+            return DataOrException(exception = e, loading = false)
         }
 
         Log.d("SUCCESSFUL", "getWeatherUpdate: $response")
-        return DataOrException(data = response)
+        return DataOrException(data = response, isSearchedFromTextFieldLocationFound = false, loading = false)
     }
 }

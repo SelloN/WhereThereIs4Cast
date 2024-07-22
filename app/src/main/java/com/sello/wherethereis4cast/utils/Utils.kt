@@ -2,7 +2,13 @@ package com.sello.wherethereis4cast.utils
 
 import android.content.Context
 import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import java.text.SimpleDateFormat
 
@@ -18,13 +24,24 @@ fun formatDecimals(item: Double): String {
 }
 
 @Composable
-fun fetchResourceId(name: String?, defType: String): Int  {
+fun fetchResourceId(name: String?, defType: String): Int {
 
     val context: Context = LocalContext.current
     val resources: Resources = context.resources
     val resourcesId =
-        resources.getIdentifier(name,
-            defType, context.packageName)
+        resources.getIdentifier(
+            name,
+            defType, context.packageName
+        )
 
     return resourcesId
+}
+
+@Composable
+fun isNetworkAvailable(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val network = connectivityManager.activeNetwork ?: return false
+    val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+    return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }

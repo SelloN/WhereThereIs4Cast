@@ -1,6 +1,5 @@
 package com.sello.wherethereis4cast.screens.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,15 +28,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.sello.wherethereis4cast.model.SearchedLocation
 import com.sello.wherethereis4cast.screens.main.WeatherTopBar
 
 @ExperimentalComposeUiApi
 @Composable
-fun SearchScreen(navController: NavController,
-                 searchedLocationViewModel: SearchedLocationViewModel = hiltViewModel()) {
+fun SearchScreen(navController: NavController) {
     Scaffold(topBar = {
         WeatherTopBar(
             title = "Search",
@@ -59,11 +55,8 @@ fun SearchScreen(navController: NavController,
                         .padding(16.dp)
                         .align(Alignment.CenterHorizontally),
                     innerPadding
-                ) { mCity ->
-                    searchedLocationViewModel.deleteAllSearchedLocations()
-                    val searchedLocation = SearchedLocation(city = mCity)
-                    searchedLocationViewModel.insertSearchedLocation(searchedLocation)
-                    Log.d("SAVED", "SearchScreen: $searchedLocation")
+                ) { searchedCity ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set("searchedCity", searchedCity)
                     navController.popBackStack()
                 }
             }
@@ -95,7 +88,6 @@ fun SearchBar(
                 keyboardController?.hide()
             })
     }
-
 }
 
 @Composable
@@ -103,7 +95,6 @@ fun CommonTextField(
     valueState: MutableState<String>,
     placeholder: String,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Next,
     onAction: KeyboardActions = KeyboardActions.Default
 ) {
 
@@ -113,7 +104,7 @@ fun CommonTextField(
         label = { Text(text = placeholder) },
         maxLines = 1,
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Next),
         keyboardActions = onAction,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.Blue,
