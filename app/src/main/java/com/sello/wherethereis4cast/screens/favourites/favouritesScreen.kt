@@ -78,7 +78,8 @@ fun CityRow(
             .fillMaxWidth()
             .height(50.dp)
             .clickable {
-                navController.navigate(WeatherScreens.MainScreen.name + "/${favourite.city}")
+                navController.navigate(WeatherScreens.MainScreen.name +
+                        "/${favourite.latitude}/${favourite.longitude}")
             },
         shape = CircleShape.copy(topEnd = CornerSize(6.dp)),
         color = Color(0xFFB2DFDB)
