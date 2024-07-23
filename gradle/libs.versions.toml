@@ -1,23 +1,25 @@
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
 coilCompose = "2.6.0"
-hiltAndroidTesting = "2.44"
 hiltNavigationCompose = "1.2.0"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesTest = "1.5.0"
 lifecycleRuntimeKtx = "2.8.3"
 activityCompose = "1.9.0"
 composeBom = "2024.06.00"
 hilt = "2.51.1"
 kps = "2.0.0-1.0.21"
+mockserverNetty = "5.14.0"
+mockwebserver = "4.12.0"
 navigationCompose = "2.7.7"
 playServicesLocation = "21.3.0"
 retrofit = "2.9.0"
 gson= "2.10.1"
-materialAndroid="1.0.5"
+materialAndroid="1.6.8"
 roomRuntime = "2.6.1"
 
 [libraries]
@@ -47,6 +49,9 @@ google-dagger-hilt-impl-android = {group = "com.google.dagger", name="hilt-andro
 google-dagger-hilt-impl-compiler-android = {group = "com.google.dagger", name="hilt-android-compiler", version.ref = "hilt"}
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+mockserver-netty = { module = "org.mock-server:mockserver-netty", version.ref = "mockserverNetty" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "mockwebserver" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 retrofit = {group = "com.squareup.retrofit2", name="retrofit", version.ref = "retrofit"}
 gson = {group = "com.google.code.gson", name="gson", version.ref = "gson"}

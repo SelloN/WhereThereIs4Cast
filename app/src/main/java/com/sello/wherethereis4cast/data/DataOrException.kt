@@ -1,9 +1,9 @@
 package com.sello.wherethereis4cast.data
 
-class DataOrException<T, Boolean, E : Exception>(
+class DataOrException<T, E: Exception>(
     var data: T? = null,
-    var loading: kotlin.Boolean? = null,
+    var loading: Boolean? = null,
     var exception: E? = null,
-    var isConnected: kotlin.Boolean? = null,
-    var isSearchedFromTextFieldLocationFound: kotlin.Boolean? = null
+    var isConnected: Boolean? = null,
+    var isSearchedFromTextFieldLocationFound: Boolean? = null
 )

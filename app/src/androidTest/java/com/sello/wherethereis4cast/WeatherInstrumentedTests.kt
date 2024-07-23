@@ -114,7 +114,6 @@ class WeatherInstrumentedTests {
         assertEquals("Johannesburg", result.data?.city?.name)
         assertEquals(15.51, result.data?.list?.get(0)?.temp?.day)
         assertFalse(result.isSearchedFromTextFieldLocationFound!!)
-
     }
 
 }

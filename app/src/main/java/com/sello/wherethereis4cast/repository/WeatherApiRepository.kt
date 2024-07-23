@@ -9,7 +9,7 @@ import javax.inject.Inject
 class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
     suspend fun getWeatherUpdate(
         locationOfCity: String
-    ): DataOrException<Weather, Boolean, Exception> {
+    ): DataOrException<Weather, Exception> {
 
         val response = try {
             api.getWeatherUpdate(location = locationOfCity)
@@ -24,7 +24,7 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
     }
 
     suspend fun getWeatherUpdate(latitude: Double, longitude: Double):
-            DataOrException<Weather, Boolean, Exception> {
+            DataOrException<Weather, Exception> {
 
         val response = try {
             api.getWeatherUpdate(latitude, longitude)

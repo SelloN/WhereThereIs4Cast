@@ -1,4 +1,4 @@
-package com.sello.wherethereis4cast.screens.search;
+package com.sello.wherethereis4cast.screens.search
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -19,7 +19,7 @@ class SearchedLocationViewModel @Inject constructor(private val repository: Weat
     private val _searchedLocationList = MutableStateFlow<List<SearchedLocation>>(emptyList())
     val searchedLocation = _searchedLocationList.asStateFlow()
 
-    //Now exists primarily as a convenience class for offline saving of searched words
+    //Now exists primarily as a convenience class for offline saving of searched words but no in use
     init {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getSearchedLocations().distinctUntilChanged()
