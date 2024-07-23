@@ -31,13 +31,13 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideWeatherDao(weatherDatabase: WeatherDatabase): WeatherDao
-    = weatherDatabase.weatherDao()
+    fun provideWeatherDao(weatherDatabase: WeatherDatabase): WeatherDao =
+        weatherDatabase.weatherDao()
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): WeatherDatabase
-    = Room.databaseBuilder(context, WeatherDatabase::class.java, "weather-database")
-        .fallbackToDestructiveMigration()
-        .build()
+    fun provideAppDatabase(@ApplicationContext context: Context): WeatherDatabase =
+        Room.databaseBuilder(context, WeatherDatabase::class.java, "weather-database")
+            .fallbackToDestructiveMigration()
+            .build()
 }

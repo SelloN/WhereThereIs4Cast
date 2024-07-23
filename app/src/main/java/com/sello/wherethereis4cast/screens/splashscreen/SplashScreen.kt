@@ -44,13 +44,16 @@ fun SplashScreen(navController: NavController) {
     var textLat = 0.0
     var textLong = 0.0
 
-    if (ContextCompat.checkSelfPermission(LocalContext.current, Manifest.permission.ACCESS_FINE_LOCATION)
-        == PackageManager.PERMISSION_GRANTED){
+    if (ContextCompat.checkSelfPermission(
+            LocalContext.current,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
         val location = fusedLocationProviderClient.lastLocation
 
         location.addOnSuccessListener {
-             textLat = it.latitude
-             textLong = it.longitude
+            textLat = it.latitude
+            textLong = it.longitude
             Log.d("TAG", "showLatAndLong: lat: $textLat and long: $textLong")
         }
     }

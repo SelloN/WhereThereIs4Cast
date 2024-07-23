@@ -8,15 +8,17 @@ import javax.inject.Inject
 
 class WeatherDbRepository @Inject constructor(private val weatherDao: WeatherDao) {
     fun getFavourites(): Flow<List<Favourite>> = weatherDao.getFavourites()
+    fun getSearchedLocations(): Flow<List<SearchedLocation>> = weatherDao.getSearchedLocations()
 
     suspend fun insertFavourite(favourite: Favourite) = weatherDao.insertFavourite(favourite)
     suspend fun updateFavourite(favourite: Favourite) = weatherDao.updateFavourite(favourite)
     suspend fun deleteFavourite(favourite: Favourite) = weatherDao.deleteFavourite(favourite)
 
-    fun getSearchedLocations(): Flow<List<SearchedLocation>> = weatherDao.getSearchedLocations()
+    suspend fun getSearchedLocationById(city: String): SearchedLocation =
+        weatherDao.getSearchedLocation(city)
 
-    suspend fun getSearchedLocationById(city: String): SearchedLocation = weatherDao.getSearchedLocation(city)
-    suspend fun insertSearchedLocation(searchedLocation: SearchedLocation) = weatherDao.insertSearchedLocation(searchedLocation)
+    suspend fun insertSearchedLocation(searchedLocation: SearchedLocation) =
+        weatherDao.insertSearchedLocation(searchedLocation)
+
     suspend fun deleteAllSearchedLocations() = weatherDao.deleteAllSearchedLocations()
-
 }

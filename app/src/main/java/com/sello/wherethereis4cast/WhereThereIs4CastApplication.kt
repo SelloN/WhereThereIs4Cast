@@ -4,4 +4,4 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class WhereThereIs4CastApplication: Application()
+class WhereThereIs4CastApplication : Application()

@@ -61,7 +61,7 @@ fun WeatherTopBar(
     latitude: String = String(),
     longitude: String = String(),
     onButtonClicked: () -> Unit = {},
-    ) {
+) {
 
     val showDialogState = remember {
         mutableStateOf(false)
@@ -74,7 +74,7 @@ fun WeatherTopBar(
     val context = LocalContext.current
 
     if (showDialogState.value) {
-        ShowSettingDropDownMenu(showDialogState = showDialogState, navController = navController)
+        SettingDropDownMenu(showDialogState = showDialogState, navController = navController)
     }
 
     TopAppBar(
@@ -148,7 +148,7 @@ fun WeatherTopBar(
                     Box {}
                 }
 
-                ShowToast(context = context, showItState)
+                Toast(context = context, showItState)
             }
         },
         backgroundColor = Color.Transparent,
@@ -163,7 +163,7 @@ fun WeatherTopBar(
 }
 
 @Composable
-fun ShowToast(context: Context, showIt: MutableState<Boolean>) {
+fun Toast(context: Context, showIt: MutableState<Boolean>) {
     if (showIt.value) {
         Toast.makeText(
             context, " Added to Favorites",
@@ -174,7 +174,7 @@ fun ShowToast(context: Context, showIt: MutableState<Boolean>) {
 
 
 @Composable
-fun ShowSettingDropDownMenu(showDialogState: MutableState<Boolean>, navController: NavController) {
+fun SettingDropDownMenu(showDialogState: MutableState<Boolean>, navController: NavController) {
 
     var expanded by remember { mutableStateOf(true) }
     val items = listOf("Favourites")

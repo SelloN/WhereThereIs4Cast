@@ -152,8 +152,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun decideCurrentPermissionStatus(locationPermissionsGranted: Boolean,
-                                              shouldShowPermissionRationale: Boolean): String {
+    private fun decideCurrentPermissionStatus(
+        locationPermissionsGranted: Boolean,
+        shouldShowPermissionRationale: Boolean
+    ): String {
         return if (locationPermissionsGranted) LocationPermissionState.Granted.name
         else if (shouldShowPermissionRationale) LocationPermissionState.Rejected.name
         else LocationPermissionState.Denied.name

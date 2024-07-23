@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.sello.wherethereis4cast.model.Favourite
 import com.sello.wherethereis4cast.repository.WeatherDbRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -20,7 +19,7 @@ class FavouriteViewModel @Inject constructor(private val repository: WeatherDbRe
     val favouriteList = _favouriteList.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.getFavourites().distinctUntilChanged()
                 .collect { listOfFavourites ->
                     if (listOfFavourites.isEmpty()) {

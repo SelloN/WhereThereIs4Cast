@@ -17,7 +17,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,12 +39,11 @@ fun FavouritesScreen(
     Scaffold(topBar = {
         WeatherTopBar(
             title = "Favourite Cities",
-            icon = Icons.Default.ArrowBack,
+            icon = Icons.AutoMirrored.Filled.ArrowBack,
             false,
             navController = navController
         ) { navController.popBackStack() }
-    }) { contentPadding ->
-        contentPadding
+    }) { _ ->
         Surface(
             modifier = Modifier
                 .padding(5.dp)
@@ -79,7 +78,7 @@ fun CityRow(
             .height(50.dp)
             .clickable {
                 navController.navigate(WeatherScreens.MainScreen.name +
-                        "/${favourite.latitude}/${favourite.longitude}")
+                            "/${favourite.latitude}/${favourite.longitude}")
             },
         shape = CircleShape.copy(topEnd = CornerSize(6.dp)),
         color = Color(0xFFB2DFDB)
@@ -88,9 +87,7 @@ fun CityRow(
             modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly,
         ) {
-
             Text(text = favourite.city, modifier = Modifier.padding(start = 4.dp))
-
             Surface(
                 modifier = Modifier.padding(0.dp),
                 shape = CircleShape,
@@ -107,7 +104,6 @@ fun CityRow(
                 imageVector = Icons.Rounded.Delete, contentDescription = "delete",
                 modifier = Modifier.clickable {
                     favouriteViewModel.deleteFavorite(favourite)
-
                 },
                 tint = Color.Red.copy(alpha = 0.3f)
             )
