@@ -43,6 +43,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.sello.wherethereis4cast.data.DataOrException
+import com.sello.wherethereis4cast.model.City
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.model.WeatherItem
 import com.sello.wherethereis4cast.navigation.state.WeatherScreens
@@ -196,10 +197,12 @@ fun MainScaffold(
     weatherState: DataOrException<Weather, Exception>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
-    showToast: Boolean = false
+    showToast: Boolean = false,
 ) {
     val backgroundImageResourcesId = fetchResourceId(imageBackground?.first, "drawable")
     val colorResourceId = fetchResourceId(imageBackground?.second, "color")
+    val weatherData = weatherState.data
+    val city: City? = weatherData?.city
 
     Box {
         Image(
@@ -215,11 +218,14 @@ fun MainScaffold(
             backgroundColor = Color.Transparent,
             topBar = {
                 WeatherTopBar(
-                    title = weatherState.data?.city?.name + " ,${weatherState.data?.city?.country}",
+                    title = city?.name + " ,${city?.country}",
                     navController = navController,
                     onAddActionClicked = {
                         navController.navigate(WeatherScreens.SearchScreen.name)
-                    }) {
+                    },
+                    latitude = city?.coord?.lat.toString(),
+                    longitude = city?.coord?.lon.toString()
+                ) {
                     Log.d("BTN", "MainScaffold: Button clicked")
                 }
             },

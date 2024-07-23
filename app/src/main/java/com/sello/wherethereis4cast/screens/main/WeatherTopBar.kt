@@ -58,8 +58,10 @@ fun WeatherTopBar(
     navController: NavController,
     favouriteViewModel: FavouriteViewModel = hiltViewModel(),
     onAddActionClicked: () -> Unit = {},
+    latitude: String = String(),
+    longitude: String = String(),
     onButtonClicked: () -> Unit = {},
-) {
+    ) {
 
     val showDialogState = remember {
         mutableStateOf(false)
@@ -130,7 +132,9 @@ fun WeatherTopBar(
                                     .insertFavourite(
                                         Favourite(
                                             city = dataList[0], // city name
-                                            country = dataList[1] // country code
+                                            country = dataList[1], // country code
+                                            latitude = latitude,
+                                            longitude = longitude
                                         )
                                     )
                                     .run {

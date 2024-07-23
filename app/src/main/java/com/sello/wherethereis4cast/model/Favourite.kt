@@ -12,5 +12,11 @@ data class Favourite(
     val city: String,
 
     @ColumnInfo(name = "country")
-    val country: String
+    val country: String,
+
+    @ColumnInfo(name = "latitude")
+    val latitude: String,
+
+    @ColumnInfo(name = "longitude")
+    val longitude: String
 )
