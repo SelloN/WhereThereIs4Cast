@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.City
 import com.sello.wherethereis4cast.model.Weather
@@ -110,9 +110,10 @@ fun WeatherContent(
 ) {
     when {
         weatherDataState.isConnected == false -> {
-            Log.d("WeatherContent method",
+            Log.d(
+                "WeatherContent",
                 "No internet connection. Please check your network settings.")
-            ShowOfflineDialog()
+            OfflineDialog()
         }
 
         weatherDataState.loading == true -> {
@@ -124,7 +125,7 @@ fun WeatherContent(
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
-            Log.d("WeatherContent method", "Searching for lat and long")
+            Log.d("WeatherContent", "Searching for lat and long")
             MainScaffold(weatherDataState, navController, imageBackground)
         }
 
@@ -133,7 +134,7 @@ fun WeatherContent(
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
-            Log.d("WeatherContent method", "Searched city: ${weatherDataState.data?.city}")
+            Log.d("WeatherContent", "Searched city: ${weatherDataState.data?.city}")
             MainScaffold(weatherDataState, navController, imageBackground)
         }
 
@@ -147,7 +148,7 @@ fun WeatherContent(
                 val imageBackground: Pair<String, String>? =
                     getImageBackground(producedWeatherState, mainViewModel)
 
-                Log.d("WeatherContent method", "Searched city: ${weatherDataState.data?.city}")
+                Log.d("WeatherContent", "Searched city: ${weatherDataState.data?.city}")
                 MainScaffold(producedWeatherState, navController, imageBackground, true)
             }
         }
@@ -158,7 +159,7 @@ fun WeatherContent(
 }
 
 @Composable
-fun ShowOfflineDialog() {
+fun OfflineDialog() {
     val openDialog = remember { mutableStateOf(true) }
 
     if (openDialog.value) {
@@ -272,8 +273,10 @@ fun MainContent(
                 WeatherTemperatureDays(data)
             }
         }
-        if(showToast) ShowToast(LocalContext.current, message = "Your searched location wasn't found." +
-                " Reverted to your current location.")
+        if (showToast) Toast(
+            LocalContext.current, message = "Your searched location wasn't found." +
+                    " Reverted to your current location."
+        )
     }
 }
 
@@ -342,7 +345,7 @@ fun WeatherStateImage(imageUrl: String) {
         modifier = Modifier
             .padding(start = 45.dp)
             .size(40.dp),
-        painter = rememberImagePainter(imageUrl),
+        painter = rememberAsyncImagePainter(imageUrl),
         contentDescription = "icon image"
     )
 }
@@ -381,7 +384,7 @@ fun TemperaturePercentiles(weatherItem: WeatherItem) {
 }
 
 @Composable
-fun ShowToast(context: Context, message: String) {
+fun Toast(context: Context, message: String) {
     LaunchedEffect(message) {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }

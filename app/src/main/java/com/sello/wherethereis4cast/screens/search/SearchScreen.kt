@@ -2,7 +2,6 @@ package com.sello.wherethereis4cast.screens.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +13,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -38,25 +37,22 @@ fun SearchScreen(navController: NavController) {
         WeatherTopBar(
             title = "Search",
             navController = navController,
-            icon = Icons.Default.ArrowBack,
+            icon = Icons.AutoMirrored.Filled.ArrowBack,
             isMainScreen = false,
         ) {
             navController.popBackStack()
         }
-    }) { innerPadding ->
+    }) { _ ->
         Surface {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                SearchBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .align(Alignment.CenterHorizontally),
-                    innerPadding
-                ) { searchedCity ->
-                    navController.previousBackStackEntry?.savedStateHandle?.set("searchedCity", searchedCity)
+                SearchBar { searchedCity ->
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        "searchedCity",
+                        searchedCity
+                    )
                     navController.popBackStack()
                 }
             }
@@ -67,8 +63,6 @@ fun SearchScreen(navController: NavController) {
 @ExperimentalComposeUiApi
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier,
-    innerPadding: PaddingValues,
     onSearch: (String) -> Unit = {}
 ) {
     val searchQueryState = rememberSaveable { mutableStateOf("") }

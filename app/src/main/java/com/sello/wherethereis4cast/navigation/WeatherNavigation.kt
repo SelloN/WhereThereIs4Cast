@@ -9,11 +9,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sello.wherethereis4cast.navigation.state.WeatherScreens
+import com.sello.wherethereis4cast.screens.favourites.FavouritesScreen
 import com.sello.wherethereis4cast.screens.main.MainScreen
 import com.sello.wherethereis4cast.screens.main.MainViewModel
 import com.sello.wherethereis4cast.screens.search.SearchScreen
 import com.sello.wherethereis4cast.screens.splashscreen.SplashScreen
-import com.sello.wherethereis4cast.screens.favourites.FavouritesScreen
 
 @ExperimentalComposeUiApi
 @Composable
@@ -21,16 +21,18 @@ fun WeatherNavigation() {
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = WeatherScreens.SplashScreen.name) {
-        composable(WeatherScreens.SplashScreen.name){
+        composable(WeatherScreens.SplashScreen.name) {
             SplashScreen(navController = navController)
         }
 
         val route = WeatherScreens.MainScreen.name
-        composable("$route/{textLat}/{textLong}",
+        composable(
+            "$route/{textLat}/{textLong}",
             arguments = listOf(
-                navArgument(name = "textLat") {type = NavType.StringType },
-                navArgument(name= "textLong") {type = NavType.StringType })
-            ){ backStackEntry ->
+                navArgument(name = "textLat") { type = NavType.StringType },
+                navArgument(name = "textLong") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
 
             val textLat = backStackEntry.arguments!!.getString("textLat")
             val textLong = backStackEntry.arguments!!.getString("textLong")
@@ -41,11 +43,11 @@ fun WeatherNavigation() {
                 longitude = textLong.toString())
         }
 
-        composable(WeatherScreens.SearchScreen.name){
+        composable(WeatherScreens.SearchScreen.name) {
             SearchScreen(navController = navController)
         }
 
-        composable(WeatherScreens.FavouriteScreen.name){
+        composable(WeatherScreens.FavouriteScreen.name) {
             FavouritesScreen(navController = navController)
         }
     }
