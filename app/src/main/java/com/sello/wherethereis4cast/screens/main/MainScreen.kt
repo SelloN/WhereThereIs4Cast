@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -59,14 +58,14 @@ fun MainScreen(
     latitude: String,
     longitude: String
 ) {
-    val weatherDataState: DataOrException<Weather, Boolean, Exception>
+    val weatherDataState: DataOrException<Weather, Exception>
     val context: Context = LocalContext.current
     val isConnected = isNetworkAvailable(context)
     val searchedCity =
         navController.currentBackStackEntry?.savedStateHandle?.get<String>("searchedCity")
 
     if (!searchedCity.isNullOrEmpty()) {
-        weatherDataState = produceState<DataOrException<Weather, Boolean, Exception>>(
+        weatherDataState = produceState<DataOrException<Weather, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
             value = if (isConnected) {
@@ -90,8 +89,8 @@ fun produceWeatherStateUsingCoordinates(
     mainViewModel: MainViewModel,
     latitude: String,
     longitude: String
-): DataOrException<Weather, Boolean, Exception> {
-    return produceState<DataOrException<Weather, Boolean, Exception>>(
+): DataOrException<Weather, Exception> {
+    return produceState<DataOrException<Weather, Exception>>(
         initialValue = DataOrException(
             loading = true
         )
@@ -102,7 +101,7 @@ fun produceWeatherStateUsingCoordinates(
 
 @Composable
 fun WeatherContent(
-    weatherDataState: DataOrException<Weather, Boolean, Exception>,
+    weatherDataState: DataOrException<Weather, Exception>,
     mainViewModel: MainViewModel,
     navController: NavController,
     latitude: String = String(),
@@ -184,7 +183,7 @@ fun ShowOfflineDialog() {
 }
 
 fun getImageBackground(
-    weatherDataState: DataOrException<Weather, Boolean, Exception>,
+    weatherDataState: DataOrException<Weather, Exception>,
     mainViewModel: MainViewModel
 ): Pair<String, String>? {
     return mainViewModel.getWeatherConditionBackground(
@@ -194,7 +193,7 @@ fun getImageBackground(
 
 @Composable
 fun MainScaffold(
-    weatherState: DataOrException<Weather, Boolean, Exception>,
+    weatherState: DataOrException<Weather, Exception>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
     showToast: Boolean = false
@@ -268,7 +267,7 @@ fun MainContent(
             }
         }
         if(showToast) ShowToast(LocalContext.current, message = "Your searched location wasn't found." +
-                " Reverted to your current location. Please try again.")
+                " Reverted to your current location.")
     }
 }
 

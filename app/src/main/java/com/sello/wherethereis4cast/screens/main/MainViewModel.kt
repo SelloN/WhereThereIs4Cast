@@ -1,6 +1,5 @@
 package com.sello.wherethereis4cast.screens.main
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.sello.wherethereis4cast.data.DataOrException
 import com.sello.wherethereis4cast.model.Weather
@@ -11,11 +10,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: WeatherApiRepository) : ViewModel() {
-    suspend fun fetchWeatherUpdate(city: String = ""): DataOrException<Weather, Boolean, Exception> {
+    suspend fun fetchWeatherUpdate(city: String = ""): DataOrException<Weather, Exception> {
         return repository.getWeatherUpdate(locationOfCity = city)
     }
 
-    suspend fun fetchWeatherUpdate(latitude: Double, longitude: Double): DataOrException<Weather, Boolean, Exception> {
+    suspend fun fetchWeatherUpdate(latitude: Double, longitude: Double): DataOrException<Weather, Exception> {
         return repository.getWeatherUpdate(latitude, longitude)
     }
 
