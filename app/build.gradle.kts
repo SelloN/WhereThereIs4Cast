@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -10,6 +13,10 @@ android {
     namespace = "com.sello.wherethereis4cast"
     compileSdk = 34
 
+    val projectFile = rootProject.file("local.properties")
+    val properties = Properties()
+    properties.load(FileInputStream(projectFile))
+
     defaultConfig {
         applicationId = "com.sello.wherethereis4cast"
         minSdk = 24
@@ -17,6 +24,7 @@ android {
         versionCode = 1
         versionName = "1.0"
         resourceConfigurations.add("en")
+        buildConfigField(type = "String", name = "apiKeySafe", properties.getProperty("apiKeySafe"))
         testInstrumentationRunner = "com.sello.wherethereis4cast.testrunner.CustomTestRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -24,6 +32,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -43,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -79,14 +92,14 @@ dependencies {
     implementation(libs.converter.gson)
 
     //Room
-    implementation (libs.androidx.room.runtime)
+    implementation(libs.androidx.room.runtime)
 
     // To use Kotlin annotation processing tool (kapt) MUST HAVE!
     ksp(libs.androidx.room.compiler)
-    implementation (libs.androidx.room.ktx)
+    implementation(libs.androidx.room.ktx)
 
     //location
-    implementation (libs.play.services.location)
+    implementation(libs.play.services.location)
 
     //Tests
     testImplementation(libs.junit)
@@ -97,15 +110,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    androidTestImplementation (libs.hilt.android.testing)
-    kspAndroidTest (libs.google.dagger.hilt.impl.compiler.android)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.google.dagger.hilt.impl.compiler.android)
 
     // MockWebServer for API mocking
     testImplementation(libs.mockwebserver)
     androidTestImplementation(libs.mockwebserver)
 
     // Unit Testing
-    testImplementation (libs.junit)
-    testImplementation (libs.kotlinx.coroutines.test)
-    testImplementation (libs.mockserver.netty)
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockserver.netty)
 }
