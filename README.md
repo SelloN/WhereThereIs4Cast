@@ -35,23 +35,26 @@ follows Android design and development best practices using MVVM.
       size. It is also the most flexible to changing it to the latest architecture, Clean
       Architecture. The only reason I don’t call this approach a Clean Architecture is because I
       did’t want to use the Use-Cases strategy.
-    - 
+* Navigation: Top app bar has a drop down menu for seeing Favourite items. You can save a favourite
+  location by clicking on the top left corner.
 
 * An optional feature leveraging local persistence.
     - Done with favorites for offline storage
     - Room was used
 
 The following are the third party
-libraries used. The others are all from the google framework (jetbrains included). 
+libraries used. The others are all from the google framework (jetbrains included).
 
 Project organization
 
 * Version control repository
     - Github: https://github.com/SelloN/WhereThereIs4Cast
 * Branching strategies
-    - We make the changes from a feature branch (feature/noted-improvements) and merge into the master branch (main in this case)
+    - We make the changes from a feature branch (feature/noted-improvements) and merge into the
+      master branch (main in this case)
 * File and folder structure follows the MVVM architecture
-* Naming conventions and coding, commenting style are done in Jetpack Compose coding and naming style
+* Naming conventions and coding, commenting style are done in Jetpack Compose coding and naming
+  style
 
 - All conventions were applied according to Jetpack Compose and Kotlin coding standards.
 
