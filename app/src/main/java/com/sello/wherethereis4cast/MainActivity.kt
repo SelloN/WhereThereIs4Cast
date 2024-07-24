@@ -1,11 +1,8 @@
 package com.sello.wherethereis4cast
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -14,14 +11,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,10 +56,6 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION))
             }
 
-            var shouldDirectUserToApplicationSettings by remember {
-                mutableStateOf(false)
-            }
-
             var currentPermissionsStatus by remember {
                 mutableStateOf(
                     decideCurrentPermissionStatus(
@@ -84,8 +77,7 @@ class MainActivity : ComponentActivity() {
                         shouldShowPermissionRationale =
                             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION)
                     }
-                    shouldDirectUserToApplicationSettings =
-                        !shouldShowPermissionRationale && !locationPermissionsGranted
+
                     currentPermissionsStatus = decideCurrentPermissionStatus(
                         locationPermissionsGranted,
                         shouldShowPermissionRationale
@@ -109,31 +101,35 @@ class MainActivity : ComponentActivity() {
             })
 
             val scope = rememberCoroutineScope()
-            val snackbarHostState = remember { SnackbarHostState() }
-            if (shouldShowPermissionRationale) {
-                LaunchedEffect(Unit) {
-                    scope.launch {
-                        val userAction = snackbarHostState.showSnackbar(
-                            message = "Please authorize location permissions",
-                            actionLabel = "Approve",
-                            duration = SnackbarDuration.Indefinite,
-                        )
-                        when (userAction) {
-                            SnackbarResult.ActionPerformed -> {
-                                shouldShowPermissionRationale = false
-                                locationPermissionLauncher.launch(locationPermissions)
-                            }
 
-                            SnackbarResult.Dismissed -> {
+            Scaffold { _ ->
+                if (shouldShowPermissionRationale) {
+                    AlertDialog(
+                        title = { Text("Permissions") },
+                        text = { Text("You need to accept permissions to use this app") },
+                        onDismissRequest = {},
+                        confirmButton = {
+                            Button(onClick = {
+                                scope.launch {
+                                    shouldShowPermissionRationale = false
+                                    locationPermissionLauncher.launch(locationPermissions)
+                                }
+                            }) {
+                                Text(text = "Approve")
+                            }
+                        },
+                        dismissButton = {
+                            Button(onClick = {
                                 shouldShowPermissionRationale = false
+                                this.finish()
+                            }) {
+                                Text(text = "Close App")
                             }
                         }
-                    }
+                    )
                 }
             }
-            if (shouldDirectUserToApplicationSettings) {
-                openApplicationSettings()
-            }
+
             if (currentPermissionsStatus == LocationPermissionState.Granted.name) {
                 WeatherForeCastApp()
             }
@@ -144,12 +140,6 @@ class MainActivity : ComponentActivity() {
         return ContextCompat.checkSelfPermission(
             this,
             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun openApplicationSettings() {
-        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null)).also {
-            startActivity(it)
-        }
     }
 
     private fun decideCurrentPermissionStatus(
