@@ -53,10 +53,10 @@ fun FavouritesScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val list = favouriteViewModel.favouriteList.collectAsState().value
+                val favouriteList = favouriteViewModel.favouriteList.collectAsState().value
 
                 LazyColumn {
-                    items(items = list) {
+                    items(items = favouriteList) {
                         CityRow(it, navController = navController, favouriteViewModel)
                     }
                 }
@@ -77,8 +77,10 @@ fun CityRow(
             .fillMaxWidth()
             .height(50.dp)
             .clickable {
-                navController.navigate(WeatherScreens.MainScreen.name +
-                            "/${favourite.latitude}/${favourite.longitude}")
+                navController.navigate(
+                    WeatherScreens.MainScreen.name +
+                            "/${favourite.latitude}/${favourite.longitude}"
+                )
             },
         shape = CircleShape.copy(topEnd = CornerSize(6.dp)),
         color = Color(0xFFB2DFDB)
