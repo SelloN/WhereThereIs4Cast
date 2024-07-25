@@ -24,6 +24,7 @@ class FavouriteViewModel @Inject constructor(private val repository: WeatherDbRe
                 .collect { listOfFavourites ->
                     if (listOfFavourites.isEmpty()) {
                         Log.d("TAG", ": Empty favourites ")
+                        _favouriteList.value = listOfFavourites
                     } else {
                         _favouriteList.value = listOfFavourites
                         Log.d("FAV", ":${favouriteList.value} ")
