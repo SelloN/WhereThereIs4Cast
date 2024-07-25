@@ -22,13 +22,8 @@ class FavouriteViewModel @Inject constructor(private val repository: WeatherDbRe
         viewModelScope.launch {
             repository.getFavourites().distinctUntilChanged()
                 .collect { listOfFavourites ->
-                    if (listOfFavourites.isEmpty()) {
-                        Log.d("TAG", ": Empty favourites ")
-                        _favouriteList.value = listOfFavourites
-                    } else {
-                        _favouriteList.value = listOfFavourites
-                        Log.d("FAV", ":${favouriteList.value} ")
-                    }
+                    _favouriteList.value = listOfFavourites
+                    Log.d("Favourites", ":${favouriteList.value} ")
                 }
         }
     }
