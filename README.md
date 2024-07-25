@@ -57,8 +57,8 @@ Project organization
   style
 
 - All conventions were applied according to Jetpack Compose and Kotlin coding standards.
-- Please ensure the app has local.properties that are naturally .gitignored - please ensure you
-  build the project first before running it.
+- Please ensure the app has the pulled local.properties that are naturally .gitignored - please
+  ensure you build the project with the file first before running it.
 - The local.properties file is very important
 
 Third party libs

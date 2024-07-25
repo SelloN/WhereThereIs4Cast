@@ -67,7 +67,7 @@ fun WeatherTopBar(
         mutableStateOf(false)
     }
 
-    val showItState = remember {
+    val showFavouriteAddedState = remember {
         mutableStateOf(false)
     }
 
@@ -138,17 +138,17 @@ fun WeatherTopBar(
                                         )
                                     )
                                     .run {
-                                        showItState.value = true
+                                        showFavouriteAddedState.value = true
                                     }
                             },
                         tint = Color.Red.copy(alpha = 0.6f)
                     )
                 } else {
-                    showItState.value = false
+                    showFavouriteAddedState.value = false
                     Box {}
                 }
 
-                Toast(context = context, showItState)
+                Toast(context = context, showFavouriteAddedState)
             }
         },
         backgroundColor = Color.Transparent,
@@ -198,7 +198,7 @@ fun SettingDropDownMenu(showDialogState: MutableState<Boolean>, navController: N
                     showDialogState.value = false
                 }) {
                     Icon(
-                        imageVector =  Icons.Default.FavoriteBorder,
+                        imageVector = Icons.Default.FavoriteBorder,
                         contentDescription = null,
                         tint = Color.LightGray
                     )
