@@ -26,8 +26,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.sello.wherethereis4cast.data.DataOrException
+import com.sello.wherethereis4cast.data.WeatherDataPOJO
 import com.sello.wherethereis4cast.model.City
 import com.sello.wherethereis4cast.model.Weather
 import com.sello.wherethereis4cast.model.WeatherItem
@@ -59,60 +59,37 @@ fun MainScreen(
     latitude: String,
     longitude: String
 ) {
-    val weatherDataState: DataOrException<Weather, Exception>
-    val context: Context = LocalContext.current
-    val isConnected = isNetworkAvailable(context)
+    var weatherDataState = mainViewModel.weatherDataState.collectAsState().value
+    val isConnected = isNetworkAvailable(LocalContext.current)
     val searchedCity =
         navController.currentBackStackEntry?.savedStateHandle?.get<String>("searchedCity")
 
-    if (!searchedCity.isNullOrEmpty()) {
-        weatherDataState = produceState<DataOrException<Weather, Exception>>(
-            initialValue = DataOrException(loading = true)
-        ) {
-            value = if (isConnected) {
-                mainViewModel.fetchWeatherUpdate(city = searchedCity)
-            } else {
-                DataOrException(isConnected = false, loading = false)
-            }
-        }.value
-    } else {
-        weatherDataState = produceWeatherStateUsingCoordinates(mainViewModel, latitude, longitude)
-    }
+    if (isConnected) {
+        if (!searchedCity.isNullOrEmpty()) {
+            mainViewModel.fetchWeatherUpdate(city = searchedCity)
+        } else {
+            mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
+        }
+    } else
+        weatherDataState = WeatherDataPOJO(isConnected = false, loading = false)
 
     WeatherContent(
-        weatherDataState, mainViewModel, navController, latitude = latitude,
-        longitude = longitude
+        weatherDataState, mainViewModel, navController
     )
 }
 
 @Composable
-fun produceWeatherStateUsingCoordinates(
-    mainViewModel: MainViewModel,
-    latitude: String,
-    longitude: String
-): DataOrException<Weather, Exception> {
-    return produceState<DataOrException<Weather, Exception>>(
-        initialValue = DataOrException(
-            loading = true
-        )
-    ) {
-        value = mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
-    }.value
-}
-
-@Composable
 fun WeatherContent(
-    weatherDataState: DataOrException<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather, Exception>,
     mainViewModel: MainViewModel,
-    navController: NavController,
-    latitude: String = String(),
-    longitude: String = String(),
+    navController: NavController
 ) {
     when {
         weatherDataState.isConnected == false -> {
             Log.d(
                 "WeatherContent",
-                "No internet connection. Please check your network settings.")
+                "No internet connection. Please check your network settings."
+            )
             OfflineDialog()
         }
 
@@ -120,17 +97,7 @@ fun WeatherContent(
             CircularProgressIndicator()
         }
 
-        weatherDataState.data != null && weatherDataState.isSearchedFromTextFieldLocationFound == false -> {
-
-            val imageBackground: Pair<String, String>? =
-                getImageBackground(weatherDataState, mainViewModel)
-
-            Log.d("WeatherContent", "Searching for lat and long")
-            MainScaffold(weatherDataState, navController, imageBackground)
-        }
-
         weatherDataState.isSearchedFromTextFieldLocationFound == true -> {
-
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
@@ -138,19 +105,29 @@ fun WeatherContent(
             MainScaffold(weatherDataState, navController, imageBackground)
         }
 
-        weatherDataState.isSearchedFromTextFieldLocationFound == false &&
-                weatherDataState.exception != null -> {
+        weatherDataState.isSearchedFromTextFieldLocationFound == false
+                && weatherDataState.exception != null -> {
+            val imageBackground: Pair<String, String>? =
+                getImageBackground(weatherDataState, mainViewModel)
 
-            val producedWeatherState =
-                produceWeatherStateUsingCoordinates(mainViewModel, latitude, longitude)
+            Log.d(
+                "WeatherContent",
+                "Searched location wasn't found: ${weatherDataState.data?.city}"
+            )
 
-            if (producedWeatherState.data != null) {
-                val imageBackground: Pair<String, String>? =
-                    getImageBackground(producedWeatherState, mainViewModel)
+            MainScaffold(weatherDataState, navController, imageBackground, showToast = true)
+        }
 
-                Log.d("WeatherContent", "Searched city: ${weatherDataState.data?.city}")
-                MainScaffold(producedWeatherState, navController, imageBackground, true)
-            }
+        weatherDataState.data != null && weatherDataState.exception == null-> {
+
+            val imageBackground: Pair<String, String>? =
+                getImageBackground(weatherDataState, mainViewModel)
+
+            Log.d(
+                "WeatherContent",
+                "Location found through lat and long co-ord: ${weatherDataState.data?.city}"
+            )
+            MainScaffold(weatherDataState, navController, imageBackground)
         }
 
     }
@@ -185,7 +162,7 @@ fun OfflineDialog() {
 }
 
 fun getImageBackground(
-    weatherDataState: DataOrException<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather, Exception>,
     mainViewModel: MainViewModel
 ): Pair<String, String>? {
     return mainViewModel.getWeatherConditionBackground(
@@ -195,14 +172,14 @@ fun getImageBackground(
 
 @Composable
 fun MainScaffold(
-    weatherState: DataOrException<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather, Exception>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
     showToast: Boolean = false,
 ) {
     val backgroundImageResourcesId = fetchResourceId(imageBackground?.first, "drawable")
     val colorResourceId = fetchResourceId(imageBackground?.second, "color")
-    val weatherData = weatherState.data
+    val weatherData = weatherDataState.data
     val city: City? = weatherData?.city
 
     Box {
@@ -232,7 +209,7 @@ fun MainScaffold(
             },
             modifier = Modifier.padding(all = 1.dp),
         ) { innerPadding ->
-            MainContent(innerPadding, weatherState.data!!, colorResourceId, showToast)
+            MainContent(innerPadding, weatherDataState.data!!, colorResourceId, showToast)
         }
     }
 }
@@ -274,8 +251,7 @@ fun MainContent(
             }
         }
         if (showToast) Toast(
-            LocalContext.current, message = "Your searched location wasn't found." +
-                    " Reverted to your current location."
+            LocalContext.current, message = "Your searched location wasn't found."
         )
     }
 }

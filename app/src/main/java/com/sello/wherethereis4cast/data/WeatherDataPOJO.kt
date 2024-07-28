@@ -1,6 +1,6 @@
 package com.sello.wherethereis4cast.data
 
-class DataOrException<T, E : Exception>(
+data class WeatherDataPOJO<T, E : Exception>(
     var data: T? = null,
     var loading: Boolean? = null,
     var exception: E? = null,

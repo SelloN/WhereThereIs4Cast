@@ -100,7 +100,6 @@ fun CityRow(
                     modifier = Modifier.padding(4.dp),
                     style = MaterialTheme.typography.caption
                 )
-
             }
             Icon(
                 imageVector = Icons.Rounded.Delete, contentDescription = "delete",

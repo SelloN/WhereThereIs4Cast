@@ -22,8 +22,8 @@ class FavouriteViewModel @Inject constructor(private val repository: WeatherDbRe
         viewModelScope.launch {
             repository.getFavourites().distinctUntilChanged()
                 .collect { listOfFavourites ->
+                    Log.d("Favourites ", ":${favouriteList.value} ")
                     _favouriteList.value = listOfFavourites
-                    Log.d("Favourites", ":${favouriteList.value} ")
                 }
         }
     }
