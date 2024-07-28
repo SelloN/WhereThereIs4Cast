@@ -55,9 +55,11 @@ Project organization
 * File and folder structure follows the MVVM architecture
 * Naming conventions and coding, commenting style are done in Jetpack Compose coding and naming
   style
+* SonarLint was also used as a Tool that checks all the MVVM and Clean Architecture standards to
+  ensure everything is done accordingly
 
 - All conventions were applied according to Jetpack Compose and Kotlin coding standards.
-- Please ensure the app has the pulled local.properties that are naturally .gitignored - please
+- Please ensure the app has the pulled local.properties that are naturally .gitignore - please
   ensure you build the project with the file first before running it.
 - The local.properties file is very important
 

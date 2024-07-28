@@ -39,8 +39,10 @@ fun WeatherNavigation() {
 
             val mainViewModel = hiltViewModel<MainViewModel>()
 
-            MainScreen(navController = navController, mainViewModel, latitude = textLat.toString(),
-                longitude = textLong.toString())
+            MainScreen(
+                navController = navController, mainViewModel, latitude = textLat.toString(),
+                longitude = textLong.toString()
+            )
         }
 
         composable(WeatherScreens.SearchScreen.name) {
