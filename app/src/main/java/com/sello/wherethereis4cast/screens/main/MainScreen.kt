@@ -59,7 +59,7 @@ fun MainScreen(
     latitude: String,
     longitude: String
 ) {
-    val weatherDataState: WeatherDataPOJO<Weather, Exception>
+    var weatherDataState = mainViewModel.weatherDataState.collectAsState().value
     val isConnected = isNetworkAvailable(LocalContext.current)
     val searchedCity =
         navController.currentBackStackEntry?.savedStateHandle?.get<String>("searchedCity")
@@ -67,10 +67,8 @@ fun MainScreen(
     if (isConnected) {
         if (!searchedCity.isNullOrEmpty()) {
             mainViewModel.fetchWeatherUpdate(city = searchedCity)
-            weatherDataState = mainViewModel.weatherDataState.collectAsState().value
         } else {
             mainViewModel.fetchWeatherUpdate(latitude.toDouble(), longitude.toDouble())
-            weatherDataState = mainViewModel.weatherDataState.collectAsState().value
         }
     } else
         weatherDataState = WeatherDataPOJO(isConnected = false, loading = false)
@@ -116,11 +114,11 @@ fun WeatherContent(
                 "WeatherContent",
                 "Searched location wasn't found: ${weatherDataState.data?.city}"
             )
-            mainViewModel.clear()
+
             MainScaffold(weatherDataState, navController, imageBackground, showToast = true)
         }
 
-        weatherDataState.data != null -> {
+        weatherDataState.data != null && weatherDataState.exception == null-> {
 
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
@@ -174,14 +172,14 @@ fun getImageBackground(
 
 @Composable
 fun MainScaffold(
-    weatherState: WeatherDataPOJO<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather, Exception>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
     showToast: Boolean = false,
 ) {
     val backgroundImageResourcesId = fetchResourceId(imageBackground?.first, "drawable")
     val colorResourceId = fetchResourceId(imageBackground?.second, "color")
-    val weatherData = weatherState.data
+    val weatherData = weatherDataState.data
     val city: City? = weatherData?.city
 
     Box {
@@ -211,7 +209,7 @@ fun MainScaffold(
             },
             modifier = Modifier.padding(all = 1.dp),
         ) { innerPadding ->
-            MainContent(innerPadding, weatherState.data!!, colorResourceId, showToast)
+            MainContent(innerPadding, weatherDataState.data!!, colorResourceId, showToast)
         }
     }
 }

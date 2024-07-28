@@ -25,7 +25,8 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
             Log.d("CAUGHT", "getWeatherUpdate: $e")
             currentState.copy(
                 exception = e,
-                isSearchedFromTextFieldLocationFound = false)
+                isSearchedFromTextFieldLocationFound = false
+            )
         }
     }
 
