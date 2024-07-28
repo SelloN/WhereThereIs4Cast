@@ -1,6 +1,7 @@
 package com.sello.wherethereis4cast
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.sello.wherethereis4cast.data.WeatherDataPOJO
 import com.sello.wherethereis4cast.repository.WeatherApiRepository
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -101,7 +102,8 @@ class WeatherInstrumentedTests {
     @Test
     fun should_get_weather_forecast_using_city_name(): Unit = runBlocking {
 
-        val result = weatherApiRepository.getWeatherUpdate("Johannesburg")
+        val result = weatherApiRepository
+            .getWeatherUpdate("Johannesburg", WeatherDataPOJO(loading = true))
         assertEquals("Johannesburg", result.data?.city?.name)
         assertEquals(15.51, result.data?.list?.get(0)?.temp?.day)
         assertTrue(result.isSearchedFromTextFieldLocationFound!!)
@@ -110,10 +112,14 @@ class WeatherInstrumentedTests {
     @Test
     fun should_get_weather_forecast_using_coordinates(): Unit = runBlocking {
 
-        val result = weatherApiRepository.getWeatherUpdate(latitude = -26.2023, longitude = 28.0436)
+        val result = weatherApiRepository.getWeatherUpdate(
+            latitude = -26.2023,
+            longitude = 28.0436,
+            WeatherDataPOJO(loading = true)
+        )
         assertEquals("Johannesburg", result.data?.city?.name)
         assertEquals(15.51, result.data?.list?.get(0)?.temp?.day)
-        assertFalse(result.isSearchedFromTextFieldLocationFound!!)
+        assertEquals(result.isSearchedFromTextFieldLocationFound, null)
     }
 
 }
