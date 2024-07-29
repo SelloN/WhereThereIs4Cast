@@ -38,9 +38,9 @@ class MainViewModel @Inject constructor(private val repository: WeatherApiReposi
         return main?.let { WeatherBackgroundState.getBackgroundValue(it) }
     }
 
-    fun clear() {
+    fun clearException() {
         _weatherDataState.value = _weatherDataState.value.copy(
-            hasException = false,
+            hasException = null,
             loading = false,
             isSearchedFromTextFieldLocationFound = false
         )
