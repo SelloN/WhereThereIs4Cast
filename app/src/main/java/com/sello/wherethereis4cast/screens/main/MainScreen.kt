@@ -80,7 +80,7 @@ fun MainScreen(
 
 @Composable
 fun WeatherContent(
-    weatherDataState: WeatherDataPOJO<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather>,
     mainViewModel: MainViewModel,
     navController: NavController
 ) {
@@ -106,7 +106,7 @@ fun WeatherContent(
         }
 
         weatherDataState.isSearchedFromTextFieldLocationFound == false
-                && weatherDataState.exception != null -> {
+                && weatherDataState.hasException == true -> {
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
@@ -119,8 +119,7 @@ fun WeatherContent(
             MainScaffold(weatherDataState, navController, imageBackground, showToast = true)
         }
 
-        weatherDataState.data != null && weatherDataState.exception == null -> {
-
+        weatherDataState.data != null -> {
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
@@ -130,7 +129,6 @@ fun WeatherContent(
             )
             MainScaffold(weatherDataState, navController, imageBackground)
         }
-
     }
 
     Log.d("WeatherContent: WeatherDataState ", weatherDataState.data.toString())
@@ -163,7 +161,7 @@ fun OfflineDialog() {
 }
 
 fun getImageBackground(
-    weatherDataState: WeatherDataPOJO<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather>,
     mainViewModel: MainViewModel
 ): Pair<String, String>? {
     return mainViewModel.getWeatherConditionBackground(
@@ -173,7 +171,7 @@ fun getImageBackground(
 
 @Composable
 fun MainScaffold(
-    weatherDataState: WeatherDataPOJO<Weather, Exception>,
+    weatherDataState: WeatherDataPOJO<Weather>,
     navController: NavController,
     imageBackground: Pair<String, String>?,
     showToast: Boolean = false,

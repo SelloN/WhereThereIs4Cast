@@ -17,7 +17,7 @@ class MainViewModel @Inject constructor(private val repository: WeatherApiReposi
     ViewModel() {
 
     private val _weatherDataState =
-        MutableStateFlow<WeatherDataPOJO<Weather, Exception>>(WeatherDataPOJO(loading = true))
+        MutableStateFlow<WeatherDataPOJO<Weather>>(WeatherDataPOJO(loading = true))
     val weatherDataState = _weatherDataState.asStateFlow()
 
     fun fetchWeatherUpdate(city: String = "") = viewModelScope.launch {
@@ -40,7 +40,7 @@ class MainViewModel @Inject constructor(private val repository: WeatherApiReposi
 
     fun clear() {
         _weatherDataState.value = _weatherDataState.value.copy(
-            exception = null,
+            hasException = false,
             loading = false,
             isSearchedFromTextFieldLocationFound = false
         )
