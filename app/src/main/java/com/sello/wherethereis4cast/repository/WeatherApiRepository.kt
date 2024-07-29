@@ -9,22 +9,22 @@ import javax.inject.Inject
 class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
     suspend fun getWeatherUpdate(
         locationOfCity: String,
-        currentState: WeatherDataPOJO<Weather, Exception>
-    ): WeatherDataPOJO<Weather, Exception> {
+        currentState: WeatherDataPOJO<Weather>
+    ): WeatherDataPOJO<Weather> {
         return try {
             val response = api.getWeatherUpdate(location = locationOfCity)
             Log.d("SUCCESSFUL", "getWeatherUpdate: $response")
             currentState.copy(
                 data = response,
                 isSearchedFromTextFieldLocationFound = true,
-                loading = false,
-                exception = null
+                hasException = false
             )
 
         } catch (e: Exception) {
             Log.d("CAUGHT", "getWeatherUpdate: $e")
             currentState.copy(
-                exception = e,
+                loading = false,
+                hasException = true,
                 isSearchedFromTextFieldLocationFound = false
             )
         }
@@ -33,12 +33,12 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
     suspend fun getWeatherUpdate(
         latitude: Double,
         longitude: Double,
-        currentState: WeatherDataPOJO<Weather, Exception>
-    ): WeatherDataPOJO<Weather, Exception> {
+        currentState: WeatherDataPOJO<Weather>
+    ): WeatherDataPOJO<Weather> {
 
         return try {
             val response = api.getWeatherUpdate(latitude, longitude)
-            Log.d("SUCCESSFUL", "getWeatherUpdate: $response")
+            Log.d("SUCCESSFUL", "getWeatherUpdate using coordinates: $response")
             currentState.copy(
                 data = response,
                 loading = false
@@ -46,7 +46,7 @@ class WeatherApiRepository @Inject constructor(private val api: WeatherAPI) {
 
         } catch (e: Exception) {
             Log.d("CAUGHT", "getWeatherUpdate using coordinates: $e")
-            currentState.copy(exception = e, loading = false)
+            currentState.copy(hasException = true, loading = false)
         }
     }
 }
