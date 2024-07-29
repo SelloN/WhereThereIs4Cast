@@ -115,11 +115,11 @@ fun WeatherContent(
                 "Searched location wasn't found: ${weatherDataState.data?.city}"
             )
 
-            mainViewModel.clear()
+            mainViewModel.clearException()
             MainScaffold(weatherDataState, navController, imageBackground, showToast = true)
         }
 
-        weatherDataState.data != null -> {
+        weatherDataState.data != null && weatherDataState.hasException == null -> {
             val imageBackground: Pair<String, String>? =
                 getImageBackground(weatherDataState, mainViewModel)
 
