@@ -30,7 +30,6 @@ class MainViewModel @Inject constructor(private val repository: WeatherApiReposi
         val currentState = _weatherDataState.value
         val weatherData =
             repository.getWeatherUpdate(latitude = latitude, longitude = longitude, currentState)
-
         _weatherDataState.value = weatherData
     }
 
