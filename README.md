@@ -37,6 +37,12 @@ follows Android design and development best practices using MVVM.
       did’t want to use the Use-Cases strategy.
 * Navigation: Top app bar has a drop down menu for seeing Favourite items. You can save a favourite
   location by clicking on the top left corner.
+* Build requirements and prerequisites
+    - Please ensure you're on AGP v8.5.1 - latest created with the project.
+    - Please ensure you build the project first since API keys are built from local.properties files
+      as a security measure. These keys are normally not saved on your machine (they are get
+      .gitignored) but for the purpose of this being only to show ability, I added them so you can
+      also use the same API key.
 
 * An optional feature leveraging local persistence.
     - Done with favorites for offline storage
@@ -62,6 +68,44 @@ Project organization
 - Please ensure the app has the pulled local.properties that are naturally .gitignore - please
   ensure you build the project with the file first before running it.
 - The local.properties file is very important
+- Auditing is done through logging
+- Unit testing was done through mocking the server for rest calls.
+- These unit tests were integration tests because since we also testing how the app functions, we
+  kill two bird with one stone by starting it first before making the calls. So only integration
+  tests were done together with an implementation of Hilt testing.
+- CD/CI was only done on GitHub. We can always install more building tools on GitHub.
+- All API documentation was followed here. The OpenWeatherMap API was used as recommended in the
+  requirements: https://openweathermap.org/api
+- All Gradle code was done according to Android latest documentation using version catalogs
+- Method complexity was decreased on the MainActivity and MainScreen. Complex methods were removed
+  and favoured the simple approach while following architectural standards
+
+Security:
+* Progaurd was used for obfuscation and shrinking of code in release mode
+* API keys were removed from the files and used only in local.property files
+* These keys are normally not saved on your machine (they are get
+  .gitignored) but for the purpose of this being only to show ability, I added them so you can
+  also use the same API key.
+
+Navigation:
+
+* Login after granting permissions
+* Hit the Heart (Love icon) on the left top app bar to add location into Favourites screen and save
+  it offline
+* Click on the right-hand top app bar to access Favourite locations
+* Offline saving of locations is on Favourites screen
+* The main screen displays the 7-day weather conditions
+
+Threading and concurrency
+
+* All threading was refactored according to Jetpack Compose standards found on Google's
+  documentation here: https://developer.android.com/develop/ui/compose/performance/bestpractices
+* I refactored all to standards based on approaches and architecture I found here and assistance
+  from SonarLint on MVVM approaches and any threading
+  inconsistencies:
+    - https://developer.android.com/develop/ui/compose/api-guidelines
+    - https://kotlinlang.org/docs/composing-suspending-functions.html#structured-concurrency-with-async
+    - 
 
 Third party libs
 
@@ -69,3 +113,7 @@ Third party libs
 gson = {group = "com.google.code.gson", name="gson", version.ref = "gson"}
 converter-gson = {group = "com.squareup.retrofit2", name="converter-gson", version.ref = "retrofit"}
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+
+Testing purposes
+testImplementation(libs.mockwebserver)
+androidTestImplementation(libs.mockwebserver)
