@@ -115,5 +115,6 @@ converter-gson = {group = "com.squareup.retrofit2", name="converter-gson", versi
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 
 Testing purposes
+
 testImplementation(libs.mockwebserver)
 androidTestImplementation(libs.mockwebserver)
